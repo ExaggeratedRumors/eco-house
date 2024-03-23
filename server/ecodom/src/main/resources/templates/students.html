@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Studenci</title>
+</head>
+<body>
+<h1>Studenci</h1>
+<table border="1" cellpadding="10" xmlns:th="http://www.w3.org/1999/xhtml">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Imię</th>
+        <th>Nazwisko</th>
+        <th> </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="s : ${generators}" th:data-generator-id="${s.index}">
+        <td th:text="${s.index}">Index</td>
+        <td th:text="${s.name}">Imię</td>
+        <td th:text="${s.surname}">Nazwisko</td>
+        <td>
+            <button type="button" class="delete-button" th:data-generator-id="${s.index}">Usuń</button>
+            <button type="button" th:onclick="'viewStudentGrades(' + ${s.index} + ')'">Oceny</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<h2>Dodawanie studenta</h2>
+<form action="/generators" method="post">
+    <label for="name">Imię:</label>
+    <input type="text" id="name" name="name" required>
+
+    <label for="surname">Nazwisko:</label>
+    <input type="text" id="surname" name="surname" required>
+
+    <button type="submit" onclick="updateAction()">Dodaj studenta</button>
+</form>
+<br>
+<br>
+<button onclick="redirectToCourses()">Przedmioty</button>
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        document.querySelectorAll('.delete-button').forEach(button => {
+            button.addEventListener('click', function() {
+                deleteStudent(this.getAttribute('data-generator-id'));
+            });
+        });
+    });
+
+    function deleteStudent(index) {
+        fetch('/generators/delete/' + index,  {
+            method: 'DELETE'
+        }).then(response => {
+            if (response.ok) {
+                document.querySelector('tr[data-generator-id="' + index + '"]').remove();
+            } else {
+                alert("Nie udało się usunąć studenta.");
+            }
+        }).catch(error => {
+            console.error('Error:', error);
+            alert("Wystąpił błąd podczas usuwania studenta.");
+        });
+    }
+
+    function viewStudentGrades(index) {
+        window.location.href = "/generators/devices/" + index;
+    }
+
+    function updateAction() {
+        const name = document.getElementById("name").value;
+        const surname = document.getElementById("surname").value;
+        fetch('/generators/add/' + name + '/' + surname,  {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        }).then( _ => {
+            window.location.href = "/generators";
+        });
+    }
+
+    function redirectToCourses() {
+        window.location.href = "/houses";
+    }
+</script>
+</body>
+</html>

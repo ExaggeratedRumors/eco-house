@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Przedmioty</title>
+</head>
+<body>
+    <h1>Przedmioty</h1>
+    <table border="1" cellpadding="10" xmlns:th="http://www.w3.org/1999/xhtml">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nazwa</th>
+            <th> </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="c : ${houses}" th:data-house-id="${c.courseId}">
+            <td th:text="${c.courseId}">ID</td>
+            <td th:text="${c.name}">Nazwa</td>
+            <td>
+                <button type="button" class="delete-button" th:data-house-id="${c.courseId}">Usuń</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h2>Dodawanie przedmiotu</h2>
+    <form action="/houses" method="post">
+        <label for="name">Nazwa przedmiotu:</label>
+        <input type="text" id="name" name="courseName" required>
+
+        <button type="submit" onclick="updateCourseAction()">Dodaj przedmiot</button>
+    </form>
+
+    <br>
+    <br>
+    <button onclick="redirectToStudents()">Studenci</button>
+    <button onclick="redirectToAverageCourses()">Wyświetl średnie dla przedmiotów</button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.querySelectorAll('.delete-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    deleteCourse(this.getAttribute('data-house-id'));
+                });
+            });
+        });
+
+        function deleteCourse(courseId) {
+            fetch('/houses/delete/' + courseId,  {
+                method: 'DELETE'
+            }).then(response => {
+                if (response.ok) {
+                    document.querySelector('tr[data-house-id="' + courseId + '"]').remove();
+                } else {
+                    alert("Nie udało się usunąć kursu.");
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+                alert("Wystąpił błąd podczas usuwania kursu.");
+            });
+        }
+
+        function updateCourseAction() {
+            const name = document.getElementById("name").value;
+            fetch('/houses/add/' + name,  {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            }).then( _ => {
+                window.location.href = "/houses";
+            });
+        }
+
+        function redirectToStudents() {
+            window.location.href = "/generators";
+        }
+
+        function redirectToAverageCourses() {
+            window.location.href = "/houses/average";
+        }
+    </script>
+</body>
+</html>
