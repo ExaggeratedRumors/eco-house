@@ -1,0 +1,6 @@
+com.zpo.studentsystem
+com.zpo.studentsystem.config
+com.zpo.studentsystem.controller
+com.zpo.studentsystem.model
+com.zpo.studentsystem.repository
+com.zpo.studentsystem.service

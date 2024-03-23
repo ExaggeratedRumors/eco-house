@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Averages</title>
+</head>
+<body>
+
+    <h2>Średnie oceny przedmiotów</h2>
+
+    <table border="1" cellpadding="10" xmlns:th="http://www.w3.org/1999/xhtml">
+        <tr>
+            <th>Nazwa przedmiotu</th>
+            <th>Średnia ocen</th>
+        </tr>
+        <!-- Iterate over houses and grades directly from the HashMap -->
+        <tr th:each="entry : ${houses.entrySet()}">
+            <td th:text="${entry.key.name}"></td>
+            <td th:text="${entry.value}"></td>
+        </tr>
+    </table>
+    <br>
+    <br>
+    <button onclick="redirectToCourses()">Powrót do listy przedmiotów</button>
+
+    <script>
+        function redirectToCourses() {
+            window.location.href = "/houses";
+        }
+    </script>
+
+</body>
+</html>

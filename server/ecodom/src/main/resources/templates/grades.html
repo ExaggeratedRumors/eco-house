@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oceny studenta</title>
+</head>
+<body>
+<h1>Oceny studenta</h1>
+<table border="1" cellpadding="10" xmlns:th="http://www.w3.org/1999/xhtml">
+    <thead>
+    <tr>
+        <th>Przedmiot</th>
+        <th>Punkty</th>
+        <th>Ocena</th>
+        <th>Zmodyfikuj ocenę</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="device, iterStat : ${devices}">
+
+        <td th:text="${device.house.name}"></td>
+        <td th:text="${device.points} + '/' + ${device.maxPoints}"></td>
+        <td th:text="${device.finalGrade}"></td>
+        <td>
+            <form th:action="@{'/generators/devices/' + ${index}}" method="post">
+                <input type="hidden" th:id="'studentId_' + ${iterStat.index}" name="studentId" th:value="${index}" required>
+                <input type="hidden" th:id="'courseId_' + ${iterStat.index}" name="courseId" th:value="${device.house.courseId}" required>
+                <input type="number" th:id="'points_' + ${iterStat.index}" name="points" th:value="${device.points}" required>
+                <button type="submit" th:onclick="'setGrade(' + ${iterStat.index} + ')'" > Zapisz</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+
+
+<h2>Dodawanie oceny</h2>
+<form th:action="@{'/generators/devices/' + ${index}}" method="post">
+
+    <input type="hidden" id="studentId" name="studentId" th:value="${index}" required>
+
+    <label for="courseId">Wybierz przedmiot:</label>
+    <select id="courseId" name="courseId" required>
+        <option th:each="house : ${houses}" th:value="${house.courseId}" th:text="${house.name}"></option>
+    </select>
+
+    <label for="maxPoints">Maksymalna ilość punktów:</label>
+    <input type="number" id="maxPoints" name="maxPoints" required>
+
+    <button type="submit" onclick="setMaxPoints()">Dodaj ocenę</button>
+</form>
+
+<br>
+<br>
+<button onclick="redirectToCourses()">Przedmioty</button>
+<button onclick="redirectToStudents()">Studenci</button>
+
+<script>
+    function redirectToCourses() {
+        window.location.href = "/houses";
+    }
+    function redirectToStudents() {
+        window.location.href = "/generators";
+    }
+
+
+    function setMaxPoints() {
+        const studentId = document.getElementById("studentId").value;
+        const courseId = document.getElementById("courseId").value;
+        const maxPoints = document.getElementById("maxPoints").value;
+        fetch('/houses/devices/add/' + studentId + '/' + courseId + '/' + maxPoints,  {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        }).then( _ => {
+            window.location.href = "/generators/devices/" + studentId;
+        });
+    }
+
+    function setGrade(index) {
+        const studentId = document.getElementById("studentId_" + index).value;
+        const courseId = document.getElementById("courseId_" + index).value;
+        const points = document.getElementById("points_" + index).value;
+
+        fetch('/houses/devices/update/' + studentId + '/' + courseId + '/' + points, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        }).then(_ => {
+            window.location.href = "/generators/devices/" + studentId;
+        });
+    }
+</script>
+</body>
+</html>
