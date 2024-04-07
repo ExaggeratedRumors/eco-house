@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Chart from 'chart.js/auto'
+import "./LineChart.css";
+
 
 const LineChart = ({ data }) => {
     const chartRef = useRef();
@@ -16,7 +18,8 @@ const LineChart = ({ data }) => {
                             label: 'Values',
                             data: data,
                             borderColor: 'rgb(51,255,80)',
-                            fill: false,
+                            backgroundColor: 'rgba(51,255,80,0.5)',
+                            fill: true,
                         },
                     ],
                 },
@@ -44,13 +47,10 @@ const LineChart = ({ data }) => {
     }, [data]);
 
     return (
-        <section className='chart section-p-top bg-black' id = "contact">
-            <div className='container'>
-                <div className='contact-content grid text-center'>
-                    <div className='content-left'>
-                        <canvas ref={chartRef} />;
-                    </div>
-                </div>
+        <section className='bg-black text-center'>
+            <div className='line-chart grid'>
+                <canvas className='line-chart-content' ref={chartRef} />
+                {/*<Line data={data} options={options} />*/}
             </div>
         </section>
     )

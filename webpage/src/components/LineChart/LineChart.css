@@ -1,7 +1,16 @@
-.content-left {
-    background-color: var(--white);
+.line-chart {
+    justify-content: center;
+    align-content: center;
+    align-self: center;
+    transition: var(--transition);
+    padding: 25rem 25rem;
+    width: 100%;
+}
+
+.line-chart-content {
+    background-color: var(--clr-white);
 }
 
 .container {
-    background-color: var(--white);
+    transition: transform 0.6s ease-in-out;
 }

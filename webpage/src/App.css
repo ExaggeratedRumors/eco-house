@@ -335,6 +335,7 @@ input, textarea, select {
 
 .section-p-top {
     padding-top: 10rem;
+    transition: var(--transition);
 }
 
 .section-t {
