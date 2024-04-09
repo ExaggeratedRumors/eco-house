@@ -11,7 +11,7 @@ import HelpPage from "./components/HelpPage/HelpPage";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <BrowserRouter>
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
         <Routes>
             <Route path = "/" element = {<MainPage />}></Route>
             <Route path = "/rooms" element = {<RoomsPage />}></Route>
