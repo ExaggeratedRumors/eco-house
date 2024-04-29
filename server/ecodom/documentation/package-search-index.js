@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.zpo.studentsystem"},{"l":"com.zpo.studentsystem.config"},{"l":"com.zpo.studentsystem.controller"},{"l":"com.zpo.studentsystem.model"},{"l":"com.zpo.studentsystem.repository"},{"l":"com.zpo.studentsystem.service"}];updateSearchResults();
