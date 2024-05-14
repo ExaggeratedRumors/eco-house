@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/eco-house/static/css/main.4abdf6ed.css",
-    "main.js": "/eco-house/static/js/main.15a392dc.js",
+    "main.css": "/eco-house/static/css/main.8ad66eb1.css",
+    "main.js": "/eco-house/static/js/main.bd626fbd.js",
     "static/js/453.8bdc27ca.chunk.js": "/eco-house/static/js/453.8bdc27ca.chunk.js",
     "static/media/house.png": "/eco-house/static/media/house.6e68723446b7e770a20c.png",
     "index.html": "/eco-house/index.html",
-    "main.4abdf6ed.css.map": "/eco-house/static/css/main.4abdf6ed.css.map",
-    "main.15a392dc.js.map": "/eco-house/static/js/main.15a392dc.js.map",
+    "main.8ad66eb1.css.map": "/eco-house/static/css/main.8ad66eb1.css.map",
+    "main.bd626fbd.js.map": "/eco-house/static/js/main.bd626fbd.js.map",
     "453.8bdc27ca.chunk.js.map": "/eco-house/static/js/453.8bdc27ca.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.4abdf6ed.css",
-    "static/js/main.15a392dc.js"
+    "static/css/main.8ad66eb1.css",
+    "static/js/main.bd626fbd.js"
   ]
 }
