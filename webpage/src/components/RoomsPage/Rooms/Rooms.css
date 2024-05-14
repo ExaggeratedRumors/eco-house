@@ -1,16 +1,56 @@
-.line-chart {
-    justify-content: center;
-    align-content: center;
-    align-self: center;
-    transition: var(--transition);
-    padding: 25rem 25rem;
-    width: 100%;
+.rooms {
+    min-height: 100vh;
+    overflow-y: auto;
 }
 
-.line-chart-content {
-    background-color: var(--clr-white);
+.rooms-title {
+    font-size: 50px;
+    font-weight: 900;
+    line-height: 1.2;
+    background: linear-gradient(to bottom, var(--clr-white), var(--clr-grey));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding: 20px;
 }
 
-.container {
-    transition: transform 0.6s ease-in-out;
+/* Select element styling */
+select {
+    /* Increase font size */
+    font-size: 16px; /* Adjust as desired */
+
+    /* Increase padding */
+    padding: 10px; /* Adjust as desired */
+
+    /* Adjust border width */
+    border: 1px solid #ccc; /* Adjust color as needed */
+
+    /* Increase border radius for rounded corners */
+    border-radius: 5px; /* Adjust as desired */
+
+    /* Adjust width */
+    width: 200px; /* Adjust as desired */
+
+    /* Adjust height */
+    height: 30px; /* Adjust as desired */
+
+    /* Improve appearance in some browsers */
+    appearance: none; /* For Webkit browsers */
+    -webkit-appearance: none; /* For older Webkit browsers */
+
+    /* Add a custom arrow for the dropdown */
+    background-image: url('data:image/svg+xml;charset=utf-8,%3Csvg%20width%3D%20%24%20height%3D%24%20viewBox%3D%0%200%2024%2024%20fill%3D%20none%20stroke%3D%20%23000%20stroke-width%3D%2%20stroke-linecap%3D%20round%20stroke-linejoin%3D%20round%3E%3Cpath%20d%3D%M8%11l5-5l-5-5%20L12%16l5-5z%3E%3C/path%3E%3C/svg%3E'); /* Adjust arrow color as needed */
+    background-repeat: no-repeat;
+    background-position: right 10px center; /* Adjust arrow position */
+    background-size: 10px 10px; /* Adjust arrow size */
+
+    /* Remove default cursor */
+    cursor: pointer;
+}
+
+.left-sidebar {
+    width: 25%;
+}
+
+.right-content {
+    width: 75%;
 }

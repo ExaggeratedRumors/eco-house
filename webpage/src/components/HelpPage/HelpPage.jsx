@@ -6,7 +6,7 @@ import FAQ from "./FAQ/FAQ";
 
 const HelpPage = () => {
     return (
-        <div className="PowerPage">
+        <div className="HelpPage">
             <Navbar />
             <FAQ />
             <Footer />
