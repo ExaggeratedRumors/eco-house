@@ -5,7 +5,7 @@ import "./Rooms.css";
 
 
 const Rooms = () => {
-    class ApexChart extends React.Component {
+    class RoomsChart extends React.Component {
         constructor(props) {
             super(props);
             this.state = {
@@ -15,44 +15,44 @@ const Rooms = () => {
                         data: [{
                                 x: 'Monday',
                                 y: [
-                                    new Date('2023-04-05').getTime(),
-                                    new Date('2023-04-08').getTime()
+                                    new Date('2023-04-10 11:15').getTime(),
+                                    new Date('2023-04-10 12:15').getTime()
                                 ]
                             }, {
                                 x: 'Tuesday',
                                 y: [
-                                    new Date('2023-04-02').getTime(),
-                                    new Date('2023-04-05').getTime()
+                                    new Date('2023-04-10 8:00').getTime(),
+                                    new Date('2023-04-10 9:00').getTime()
                                 ]
                             }, {
                                 x: 'Tuesday',
                                 y: [
-                                    new Date('2023-04-05').getTime(),
-                                    new Date('2023-04-07').getTime()
+                                    new Date('2023-04-10 1:00').getTime(),
+                                    new Date('2023-04-10 3:00').getTime()
                                 ]
                             }, {
                                 x: 'Wednesday',
                                 y: [
-                                    new Date('2023-04-03').getTime(),
-                                    new Date('2023-04-09').getTime()
+                                    new Date('2023-04-10 6:00').getTime(),
+                                    new Date('2023-04-10 7:00').getTime()
                                 ]
                             }, {
                                 x: 'Wednesday',
                                 y: [
-                                    new Date('2023-04-08').getTime(),
-                                    new Date('2023-04-11').getTime()
+                                    new Date('2023-04-10 13:15').getTime(),
+                                    new Date('2023-04-10 14:15').getTime()
                                 ]
                             }, {
                                 x: 'Thursday',
                                 y: [
-                                    new Date('2023-04-11').getTime(),
-                                    new Date('2023-04-16').getTime()
+                                    new Date('2023-04-10 18:10').getTime(),
+                                    new Date('2023-04-10 23:51').getTime()
                                 ]
                             }, {
                                 x: 'Monday',
                                 y: [
-                                    new Date('2023-04-01').getTime(),
-                                    new Date('2023-04-03').getTime()
+                                    new Date('2023-04-10 11:11').getTime(),
+                                    new Date('2023-04-10 19:35').getTime()
                                 ]
                             }
                         ]
@@ -61,39 +61,32 @@ const Rooms = () => {
                         data: [{
                                 x: 'Monday',
                                 y: [
-                                    new Date('2023-04-02').getTime(),
-                                    new Date('2023-04-05').getTime()
+                                    new Date('2023-04-10 12:15').getTime(),
+                                    new Date('2023-04-10 13:15').getTime()
                                 ]
                             }, {
                                 x: 'Wednesday',
                                 y: [
-                                    new Date('2023-04-06').getTime(),
-                                    new Date('2023-04-16').getTime()
-                                ],
-                                goals: [
-                                    {
-                                        name: 'Break',
-                                        value: new Date('2023-04-10').getTime(),
-                                        strokeColor: '#CD2F2A'
-                                    }
+                                    new Date('2023-04-10 15:30').getTime(),
+                                    new Date('2023-04-10 15:55').getTime()
                                 ]
                             }, {
                                 x: 'Tuesday',
                                 y: [
-                                    new Date('2023-04-03').getTime(),
-                                    new Date('2023-04-07').getTime()
+                                    new Date('2023-04-10 12:00').getTime(),
+                                    new Date('2023-04-10 21:00').getTime()
                                 ]
                             }, {
                                 x: 'Friday',
                                 y: [
-                                    new Date('2023-04-20').getTime(),
-                                    new Date('2023-04-22').getTime()
+                                    new Date('2023-04-10 11:00').getTime(),
+                                    new Date('2023-04-10 12:00').getTime()
                                 ]
                             }, {
                                 x: 'Monday',
                                 y: [
-                                    new Date('2023-04-10').getTime(),
-                                    new Date('2023-04-16').getTime()
+                                    new Date('2023-04-10 15:00').getTime(),
+                                    new Date('2023-04-10 17:00').getTime()
                                 ]
                             }
                         ]
@@ -102,19 +95,19 @@ const Rooms = () => {
                         data: [{
                                 x: 'Saturday',
                                 y: [
-                                    new Date('2023-04-10').getTime(),
-                                    new Date('2023-04-17').getTime()
+                                    new Date('2023-04-10 15:00').getTime(),
+                                    new Date('2023-04-10 16:00').getTime()
                                 ]
                             }, {
                                 x: 'Sunday',
                                 y: [
-                                    new Date('18:18').getTime(),
-                                    new Date('18:20').getTime()
+                                    new Date('2023-04-10 01:00').getTime(),
+                                    new Date('2023-04-10 16:00').getTime()
                                 ],
                                 goals: [
                                     {
                                         name: 'Break',
-                                        value: new Date('2023-04-07').getTime(),
+                                        value: new Date('2023-04-10 14:00').getTime(),
                                         strokeColor: '#CD2F2A'
                                     }
                                 ]
@@ -130,8 +123,6 @@ const Rooms = () => {
                     fill: { type: 'solid', opacity: 0.6 },
                     legend: { position: 'top', horizontalAlign: 'left' }
                 },
-
-
             };
         }
 
@@ -150,23 +141,58 @@ const Rooms = () => {
     }
 
     return (
-        <section className='rooms section-p bg-black text-center'>
+        <section className='rooms section-p bg-md-black text-center'>
+            <h1 className='rooms-title'>Device Usage Schedule</h1>
             <div className="container">
-                <h1 className='rooms-title'>Device Usage Schedule</h1>
-                <div>
-                    <h2>Rooms</h2>
-                    <select>
-                        <option>Room 1</option>
-                        <option>Room 2</option>
-                        <option>Room 3</option>
-                    </select>
+                <div className="rooms-panel">
+                    <div className="rooms-left-panel">
+                        <div>
+                            <h2>Houses</h2>
+                            <select>
+                                <option>House 1</option>
+                                <option>House 2</option>
+                            </select>
 
-                    <Link to="/add-room">
-                        <button>Add Room</button>
-                    </Link>
+                            <Link to="/add-house">
+                                <button>Add House</button>
+                            </Link>
+                        </div>
+                        <div>
+                            <h2>Rooms</h2>
+                            <select>
+                                <option>Room 1</option>
+                                <option>Room 2</option>
+                                <option>Room 3</option>
+                            </select>
+
+                            <Link to="/add-room">
+                                <button>Add Room</button>
+                            </Link>
+                        </div>
+                    </div>
+
+                    <div className="rooms-right-panel">
+                        <div>
+                            <h2>Devices</h2>
+                            <select>
+                                <option>Lamp</option>
+                                <option>Dryer</option>
+                                <option>Washing machine</option>
+                            </select>
+
+                            <Link to="/add-device">
+                            <button>Add Device</button>
+                            </Link>
+                        </div>
+                    </div>
                 </div>
 
-                <ApexChart/>
+                <div className='time-chart'>
+                    <div className='time-chart-content'>
+                        <RoomsChart/>
+                    </div>
+                </div>
+
             </div>
         </section>
 

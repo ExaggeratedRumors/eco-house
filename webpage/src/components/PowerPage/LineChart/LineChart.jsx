@@ -47,7 +47,7 @@ const LineChart = ({ data }) => {
     }, [data]);
 
     return (
-        <section className='bg-black text-center'>
+        <section className='bg-md-black text-center'>
             <div className='line-chart grid'>
                 <canvas className='line-chart-content' ref={chartRef} />
                 {/*<Line data={data} options={options} />*/}
