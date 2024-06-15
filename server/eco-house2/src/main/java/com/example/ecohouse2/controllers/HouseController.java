@@ -1,21 +1,20 @@
 package com.example.ecohouse2.controllers;
 
-import com.example.ecohouse2.Device;
 import com.example.ecohouse2.House;
+import com.example.ecohouse2.Owner;
 import com.example.ecohouse2.services.DeviceService;
 import com.example.ecohouse2.services.GeneratorService;
 import com.example.ecohouse2.services.HouseService;
+import com.example.ecohouse2.services.OwnerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import com.example.ecohouse2.dto.HouseRequest;
 
 /**
  * Controller for the House entity.
@@ -32,20 +31,24 @@ public class HouseController {
     @Autowired
     DeviceService deviceService;
 
+    @Autowired
+    OwnerService ownerService;
+
     @RequestMapping("/houses")
-    public String getCourses(Model model) {
+    public String getHouses(Model model) {
         List<House> houses = houseService.getHouses();
-        model.addAttribute("courses", houses);
+        model.addAttribute("houses", houses);
         return "houses.html";
     }
 
-    @PostMapping("/houses/add/{name}")
-    public ResponseEntity<House> addCourse(@PathVariable String name) {
-        System.out.println("Adding house \"" + name+"\"");
-        House result = houseService.addHouse(name);
-        if(result == null)
+    @PostMapping("/houses/add")
+    public ResponseEntity<House> addHouse(@RequestBody HouseRequest houseRequest) {
+        System.out.println("Adding house \"" + houseRequest.getName() +"\"");
+        House result = houseService.addHouse(houseRequest);
+        if(result == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        System.out.println("House added with id " + result.getHouseId());
+        }
+        System.out.println("House added with id " + result.getHouse_id());
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

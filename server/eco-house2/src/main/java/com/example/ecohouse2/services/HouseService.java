@@ -1,7 +1,10 @@
 package com.example.ecohouse2.services;
 
 import com.example.ecohouse2.House;
+import com.example.ecohouse2.Owner;
+import com.example.ecohouse2.dto.HouseRequest;
 import com.example.ecohouse2.repositories.HouseRepository;
+import com.example.ecohouse2.repositories.OwnerRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,16 +23,21 @@ public class HouseService {
     @Autowired
     private HouseRepository houseRepo;
 
+    @Autowired
+    private OwnerRepository ownerRepo;
 
     public List<House> getHouses() {
         return houseRepo.findAll();
     }
 
 
-    public House addHouse(String name) {
-        House house = new House();
-        house.setName(name);
-        return houseRepo.save(house);
+    public House addHouse(HouseRequest houseRequest) {
+        Owner houseOwner = ownerRepo.findById((long)houseRequest.getOwnerId()).orElseThrow(
+                () -> new EntityNotFoundException("Owner not found with id " + houseRequest.getOwnerId()));
+        House newHouse = houseRequest.toHouse();
+        newHouse.setOwner(houseOwner);
+        System.out.println("Attempt to add house with owner: " + houseOwner.getOwner_id() + " " + houseOwner.getName());
+        return houseRepo.save(newHouse);
     }
 
 

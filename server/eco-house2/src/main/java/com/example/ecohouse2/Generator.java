@@ -1,5 +1,6 @@
 package com.example.ecohouse2;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,16 +19,17 @@ public class Generator {
     private String name;
 
     @Column(name = "panel_surface", nullable = false)
-    private String panelSurface;
+    private Double panelSurface;
 
     @Column(name = "effectiveness", nullable = false)
-    private String effectiveness;
+    private Double effectiveness;
 
     @Column(name = "battery_capacity", nullable = false)
-    private String batteryCapacity;
+    private Double batteryCapacity;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "house_id", nullable = false)
+    @JsonBackReference
     private House house;
 
 }

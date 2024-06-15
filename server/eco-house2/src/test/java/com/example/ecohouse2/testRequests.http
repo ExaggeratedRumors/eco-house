@@ -1,5 +1,69 @@
-### Dodawanie pięciu studentów
-GET http://localhost:8082/houses
+### get owner
+GET http://localhost:8082/owners/1
 
-###
-POST http://localhost:8082/owners/add/a/b/c
+
+### add owner
+POST http://localhost:8082/owners/add
+Content-Type: application/json
+
+{
+  "password": "hunter2",
+  "email": "e@mail.com",
+  "name": "Maciek",
+  "surname": "WisłaKraków"
+}
+
+### add house
+POST http://localhost:8082/houses/add
+Content-Type: application/json
+
+{
+  "ownerId": 1,
+  "address": "Wlokniarzy",
+  "name": "Domek 1",
+  "daytimeTariff": 0.2,
+  "nightTariff": 0.1
+}
+
+
+
+### add room
+POST http://localhost:8082/rooms/add
+Content-Type: application/json
+
+{
+  "houseId": 1,
+  "name": "Pokój 1"
+}
+
+### add device
+POST http://localhost:8082/devices/add
+Content-Type: application/json
+
+{
+  "roomId": 1,
+  "name": "Lampka",
+  "powerConsumption": 10
+}
+
+### add generator
+POST http://localhost:8082/generators/add
+Content-Type: application/json
+
+{
+  "houseId": 1,
+  "name": "Generator 1",
+  "panelSurface": 10,
+  "effectiveness": 0.5,
+  "batteryCapacity": 100
+}
+
+### add intervals
+POST http://localhost:8082/intervals/add
+Content-Type: application/json
+
+{
+  "deviceId": 1,
+  "timeStart": "2020-01-01T00:00:00",
+  "timeEnd": "2020-01-01T01:00:00"
+}

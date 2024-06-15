@@ -10,11 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
+import org.springframework.web.bind.annotation.*;
+import com.example.ecohouse2.dto.OwnerRequest;
 import java.util.List;
 
 /**
@@ -43,13 +40,22 @@ public class OwnerController {
         return "owners.html";
     }
 
-    @PostMapping("/owners/add/{name}/{email}/{password}")
-    public ResponseEntity<Owner> addOwner(@PathVariable String name, @PathVariable String email, @PathVariable String password) {
-        System.out.println("Adding owner \"" + name+"\"");
-        Owner result = ownerService.addUser(name, email, password);
+    @PostMapping("/owners/add")
+    public ResponseEntity<Owner> addOwner(@RequestBody OwnerRequest ownerRequest) {
+        System.out.println("Adding owner \"" + ownerRequest.getName()+"\"");
+        Owner result = ownerService.addOwner(ownerRequest.toOwner());
         if(result == null)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        System.out.println("Owner added with id " + result.getId());
+
+        System.out.println("Owner added with id " + result.getOwner_id());
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping("/owners/{id}")
+    public ResponseEntity<Owner> getOwner(@PathVariable Long id) {
+        System.out.println("Getting owner with id " + id);
+        Owner result = ownerService.getOwner(id);
+        System.out.println("Owner found");
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
