@@ -1,9 +1,13 @@
 package com.example.ecohouse2;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -12,7 +16,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "house")
-public class House {
+public class House implements Serializable {
 
     public House() {
         this.createdAt = OffsetDateTime.now();
@@ -26,7 +30,7 @@ public class House {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "house_id", nullable = false)
-    private Long id;
+    private Long house_id;
 
     @Column(name = "address", nullable = false, length = Integer.MAX_VALUE)
     private String address;
@@ -44,16 +48,15 @@ public class House {
     private Double nightTariff;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    //@MapsId("owner_id")
+    @JoinColumn(name = "owner_id", nullable = false)
+    @JsonBackReference
     private Owner owner;
 
-    @OneToMany(mappedBy = "house")
+    @OneToMany(mappedBy = "house", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<Generator> generators = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "house")
-    private Set<Room> rooms = new LinkedHashSet<>();
 
-    public Long getHouseId() {
-        return id;
-    }
+    @OneToMany(mappedBy = "house", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private Set<Room> rooms = new LinkedHashSet<>();
 }

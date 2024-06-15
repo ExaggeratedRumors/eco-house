@@ -1,5 +1,7 @@
 package com.example.ecohouse2;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,12 +27,10 @@ public class Device {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "room_id", nullable = false)
+    @JsonBackReference
     private Room room;
 
-    @OneToMany(mappedBy = "device")
+    @OneToMany(mappedBy = "device", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<Interval> intervals = new LinkedHashSet<>();
 
-    public void setDeviceName(String deviceName) {
-        this.name = deviceName;
-    }
 }
