@@ -20,9 +20,9 @@ CREATE TABLE IF NOT EXISTS "device" (
 CREATE TABLE IF NOT EXISTS "generator" (
 	"generator_id" bigint GENERATED ALWAYS AS IDENTITY NOT NULL UNIQUE,
 	"name" text NOT NULL,
-	"panel_surface" varchar(255) NOT NULL,
-	"effectiveness" varchar(255) NOT NULL,
-	"battery_capacity" varchar(255) NOT NULL,
+	"panel_surface" double precision NOT NULL,
+	"effectiveness" double precision NOT NULL,
+	"battery_capacity" double precision NOT NULL,
 	"house_id" bigint NOT NULL,
 	PRIMARY KEY ("generator_id")
 );
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS "room" (
 );
 
 CREATE TABLE IF NOT EXISTS "owner" (
-	"owner_id" bigint NOT NULL,
+	"owner_id" bigint GENERATED ALWAYS AS IDENTITY NOT NULL UNIQUE,
 	"email" text NOT NULL,
 	"name" text NOT NULL,
 	"surname" text NOT NULL,

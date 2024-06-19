@@ -1,8 +1,16 @@
 package com.example.ecohouse2.services;
 
 
+import com.example.ecohouse2.Device;
 import com.example.ecohouse2.Generator;
+import com.example.ecohouse2.House;
+import com.example.ecohouse2.Room;
+import com.example.ecohouse2.dto.DeviceRequest;
+import com.example.ecohouse2.dto.GeneratorRequest;
+import com.example.ecohouse2.dto.RoomRequest;
 import com.example.ecohouse2.repositories.GeneratorRepository;
+import com.example.ecohouse2.repositories.HouseRepository;
+import com.example.ecohouse2.repositories.RoomRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +28,20 @@ public class GeneratorService {
     @Autowired
     private GeneratorRepository generatorRepo;
 
+    @Autowired
+    private HouseRepository houseRepository;
+
     public List<Generator> getGenerators() {
         return generatorRepo.findAll();
     }
 
-    public Generator addGenerator(String name) {
-        Generator generator = new Generator();
-        generator.setName(name);
-        return generatorRepo.save(generator);
+    public Generator addGenerator(GeneratorRequest generatorRequest) {
+        House house = houseRepository.findById(generatorRequest.getHouseId()).orElseThrow(
+                () -> new EntityNotFoundException("House not found with id " + generatorRequest.getHouseId()));
+        Generator newGenerator = generatorRequest.toGenerator();
+        newGenerator.setHouse(house);
+        System.out.println("Attempt to add generator to house: " + house.getHouse_id() + " " + house.getName());
+        return generatorRepo.save(newGenerator);
     }
 
     public Boolean deleteGenerator(Long index) {

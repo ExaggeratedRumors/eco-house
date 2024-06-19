@@ -16,26 +16,23 @@ public class OwnerService {
     @Autowired
     private OwnerRepository userRepo;
 
-    public Owner addUser(String name, String email, String password) {
-        Owner owner = new Owner();
-        owner.setName(name);
-        owner.setEmail(email);
-        owner.setPassword(password);
+    public Owner addOwner(Owner owner) {
         return userRepo.save(owner);
     }
+
 
     public List<Owner> getUsers() {
         return userRepo.findAll();
     }
 
     public Boolean deleteUser(Long index) {
-        if(getDevice(index) == null) return false;
+        if(getOwner(index) == null) return false;
         userRepo.deleteById(index);
         return true;
     }
 
 
-    public Owner getDevice(Long index) {
+    public Owner getOwner(Long index) {
         return userRepo.findById(index).orElseThrow(
                 () -> new EntityNotFoundException("Owner not found with id " + index)
         );
