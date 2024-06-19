@@ -11,11 +11,14 @@ const Registration = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:3001/api/data');
+                console.log("pass 1")
+                const response = await fetch('http://localhost:8082/owners/1');
+                console.log("pass 2")
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    throw new Error('Service not available');
                 }
                 const data = await response.json();
+                console.log("pass 3")
                 setData(data);
             } catch (error) {
                 console.error('Error fetching data:', error);

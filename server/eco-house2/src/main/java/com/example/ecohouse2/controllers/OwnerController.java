@@ -40,6 +40,7 @@ public class OwnerController {
         return "owners.html";
     }
 
+    @CrossOrigin
     @PostMapping("/owners/add")
     public ResponseEntity<Owner> addOwner(@RequestBody OwnerRequest ownerRequest) {
         System.out.println("Adding owner \"" + ownerRequest.getName()+"\"");
@@ -51,6 +52,7 @@ public class OwnerController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @CrossOrigin
     @GetMapping("/owners/{id}")
     public ResponseEntity<Owner> getOwner(@PathVariable Long id) {
         System.out.println("Getting owner with id " + id);
