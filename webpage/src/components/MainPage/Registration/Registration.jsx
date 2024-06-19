@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import "./Registration.css";
 import {Formik} from 'formik';
 import {FaCertificate, FaEnvelopeOpen, FaRegistered} from "react-icons/fa";
@@ -6,6 +6,24 @@ import {Link} from "react-router-dom";
 
 const Registration = () => {
     const [isRegistering, setIsRegistering] = useState(false);
+    const [data, setData] = useState(null)
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch('http://localhost:3001/api/data');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                setData(data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     const handleToggleMode = () => {
         setIsRegistering(!isRegistering);
