@@ -7,8 +7,27 @@ import {Link} from "react-router-dom";
 const Registration = () => {
     const [isRegistering, setIsRegistering] = useState(false);
     const [data, setData] = useState(null)
+    const [userId, setUserId] = useState(null)
 
     useEffect(() => {
+
+        /*const handleSubmit = async (e) => {
+            try {
+                e.preventDefault();
+                const response = await fetch("http://localhost:8081/", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({imageName, login, password}),
+                });
+                const blob = await response.blob();
+                const imageObjectURL = URL.createObjectURL(blob);
+                setImage(imageObjectURL);
+            } catch (err) {
+                setError('Error fetching the image');
+            }
+
+        };*/
+
         const fetchData = async () => {
             try {
                 console.log("pass 1")

@@ -5,7 +5,50 @@ import "./Rooms.css";
 
 
 const Rooms = () => {
+    const [ownerData, setOwnerData] = useState(null)
+
+    /** House **/
+    const [houseName, setHouseName] = useState('');
+    const [houseAddress, setHouseAddress] = useState('');
+    const [houseDayTariff, setHouseDayTariff] = useState(0.0);
+    const [houseNightTariff, setHouseNightTariff] = useState(0.0);
+
+    /** Room **/
+    const [roomHouseId, setRoomHouseId] = useState(0);
+    const [roomName, setRoomName] = useState('');
+
+    /** Device **/
+    const [deviceRoomId, setDeviceRoomId] = useState(0);
+    const [deviceName, setDeviceName] = useState('');
+    const [devicePowerConsumption, setDvicePowerConsumption] = useState(0.0);
+
+    /** Generator **/
+    const [generatorHouseId, setGeneratorHouseId] = useState('');
+    const [generatorName, setGeneratorName] = useState('');
+    const [generatorPanelSurface, setGeneratorPanelSurface] = useState(0.0);
+    const [generatorEffectiveness, setGeneratorEffectiveness] = useState(0.0);
+    const [generatorBatteryCapacity, setGeneratorBatteryCapacity] = useState(0.0);
+
+    /** Interval **/
+    const [intervalDeviceId, setIntervalDeviceId] = useState(0);
+    const [intervalStartTime, setIntervalStartTime] = useState('');
+    const [intervalEndTime, setIntervalEndtime] = useState('');
+
+    const fetchData = async () => {
+        try {
+            const response = await fetch('http://localhost:8082/owners/1');
+            if (!response.ok) {
+                throw new Error('Service not available');
+            }
+            const data = await response.json();
+            //setData(data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
     class RoomsChart extends React.Component {
+
         constructor(props) {
             super(props);
             this.state = {
