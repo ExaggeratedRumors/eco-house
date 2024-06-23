@@ -32,11 +32,12 @@ public class Generator {
     @JsonBackReference
     private House house;
 
+    public double dailyEnergyProduced_kWh(double hoursOfSunlight) {
+        return (hoursOfSunlight * this.wattage) * this.effectiveness / 1000.0;
+    }
 
-    //calculate energy produced by generator in one day
-    //@JsonGetter("energyProduced")
     public double dailyEnergyProduced_kWh() {
         double hoursOfSunlight = 5.0;
-        return (hoursOfSunlight * this.wattage) * this.effectiveness / 1000.0;
+        return dailyEnergyProduced_kWh(hoursOfSunlight);
     }
 }
