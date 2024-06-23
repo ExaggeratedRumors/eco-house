@@ -77,8 +77,8 @@ Content-Type: application/json
 
 {
   "deviceId": 1,
-  "timeStart": "00:00",
-  "timeEnd": "08:00"
+  "timeStart": "09:00",
+  "timeEnd": "11:00"
 }
 
 ### add interval2
@@ -88,7 +88,7 @@ Content-Type: application/json
 {
   "deviceId": 2,
   "timeStart": "07:00",
-  "timeEnd": "23:30"
+  "timeEnd": "10:00"
 }
 
 ### get daily power graph
@@ -101,6 +101,22 @@ Content-Type: application/json
 
 ### get daily costs graph
 GET http://localhost:8082/dailyCostsGraph
+Content-Type: application/json
+
+{
+  "houseId": 1
+}
+
+### get daily cost
+GET http://localhost:8082/dailyCost
+Content-Type: application/json
+
+{
+  "houseId": 1
+}
+
+### get daily energy produced
+GET http://localhost:8082/dailyEnergyProduced
 Content-Type: application/json
 
 {

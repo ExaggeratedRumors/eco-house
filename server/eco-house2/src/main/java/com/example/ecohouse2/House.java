@@ -64,22 +64,22 @@ public class House implements Serializable {
     @JsonBackReference
     private Owner owner;
 
-    @JsonGetter("dailyEnergyProduced_kWh")
+    //@JsonGetter("dailyEnergyProduced_kWh")
     public double calculateDailyEnergyProduced() {
         return generators.stream().mapToDouble(Generator::dailyEnergyProduced_kWh).sum();
     }
 
-    @JsonGetter("dailyEnergyConsumedGraph_WattsPerHour")
+    //@JsonGetter("dailyEnergyConsumedGraph_WattsPerHour")
     public Map<String, Double> calculateDailyEnergyConsumed() {
         return convertToPowerMap(getIntervals());
     }
 
-    @JsonGetter("dailyCostGraph")
+    //@JsonGetter("dailyCostGraph")
     public Map<String, Double> calculateDailyCost() {
         return calculateCostOfEnergy(calculateDailyEnergyConsumed());
     }
 
-    @JsonGetter("dailyCost")
+    //@JsonGetter("dailyCost")
     public double calculateDailyCostSum() {
         Map<String, Double> costGraph = calculateDailyCost();
         double sum = 0.0;
