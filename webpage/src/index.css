@@ -73,11 +73,11 @@ button {
     font-size: 1.8rem;
 }
 
-input, textarea, select {
-    outline: 0;
-    border: none;
-    resize: none;
-}
+/*input, textarea, select {*/
+/*    outline: 0;*/
+/*    border: none;*/
+/*    resize: none;*/
+/*}*/
 
 /* custom classes */
 .container {

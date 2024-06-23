@@ -35,6 +35,75 @@ select {
     cursor: pointer;
 }
 
+.room-container {
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.select-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.select-box {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+label {
+    margin-bottom: 5px;
+}
+
+select, input {
+    margin-bottom: 10px;
+    height: 56px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background-color: var(--clr-dark);
+    color: var(--clr-white);
+    font-family: inherit;
+    font-size: 18px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+button {
+    font-size: 16px;
+    cursor: pointer;
+    background: linear-gradient(to top right, var(--clr-md-green), var(--clr-grey));
+    color: var(--clr-white);
+    text-transform: uppercase;
+    padding: 16px 32px;
+    margin-left: 16px;
+    margin-right: 16px;
+    letter-spacing: 1px;
+    border-radius: 3px;
+}
+
+.add-form {
+    padding-left: 25px;
+    padding-right: 25px;
+    margin-top: 10px;
+    transition: all 500ms linear;
+    width: 100%;
+    right: 0;
+    top: 0;
+}
+
+.add-form.show {
+    max-height: 200px;
+}
+
+.add-form.show .input{
+    max-height: 200px;
+}
+
+
+
+
+
 .time-chart {
     padding: 50px 0;
     justify-content: center;
