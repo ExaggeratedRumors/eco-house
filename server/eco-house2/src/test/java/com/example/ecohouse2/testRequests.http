@@ -43,8 +43,19 @@ Content-Type: application/json
 {
   "roomId": 1,
   "name": "Lampka",
-  "powerConsumption": 10
+  "powerConsumption": 2
 }
+
+### add device
+POST http://localhost:8082/devices/add
+Content-Type: application/json
+
+{
+  "roomId": 1,
+  "name": "Lampka2",
+  "powerConsumption": 5
+}
+
 
 ### add generator
 POST http://localhost:8082/generators/add
@@ -58,12 +69,22 @@ Content-Type: application/json
   "wattage": 300
 }
 
-### add intervals
+### add interval1
 POST http://localhost:8082/intervals/add
 Content-Type: application/json
 
 {
   "deviceId": 1,
-  "timeStart": "03:00",
-  "timeEnd": "04:00"
+  "timeStart": "00:00",
+  "timeEnd": "08:00"
+}
+
+### add interval2
+POST http://localhost:8082/intervals/add
+Content-Type: application/json
+
+{
+  "deviceId": 2,
+  "timeStart": "07:00",
+  "timeEnd": "13:00"
 }
