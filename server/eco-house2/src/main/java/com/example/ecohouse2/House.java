@@ -57,6 +57,11 @@ public class House implements Serializable {
         return generators.stream().mapToDouble(Generator::dailyEnergyProduced_kWh).sum();
     }
 
+    @JsonGetter("dailyEnergyConsumedGraph_kWh")
+    public double calculateDailyEnergyConsumed() {
+        return 0.0;
+    }
+
     @OneToMany(mappedBy = "house", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<Generator> generators = new LinkedHashSet<>();
 
