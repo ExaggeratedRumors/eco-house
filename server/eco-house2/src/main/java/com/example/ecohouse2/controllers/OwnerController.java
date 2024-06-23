@@ -33,6 +33,7 @@ public class OwnerController {
     @Autowired
     DeviceService deviceService;
 
+    @CrossOrigin
     @RequestMapping("/owners")
     public String getUsers(Model model) {
         List<Owner> owners = ownerService.getUsers();
@@ -61,6 +62,7 @@ public class OwnerController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @CrossOrigin
     @DeleteMapping("/owners/delete/{id}")
     public ResponseEntity<Long> deleteOwner(@PathVariable Long id) {
         System.out.println("Deleting owner with id " + id);

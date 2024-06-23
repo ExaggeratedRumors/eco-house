@@ -30,7 +30,7 @@ public class IntervalController {
     IntervalService intervalService;
 
 
-
+    @CrossOrigin
     @PostMapping("/intervals/add")
     public ResponseEntity<Interval> addInterval(@RequestBody IntervalRequest intervalRequest) {
         System.out.println("Adding interval (start at \"" + intervalRequest.getTimeStart() +")\"");

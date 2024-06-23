@@ -34,6 +34,7 @@ public class HouseController {
     @Autowired
     OwnerService ownerService;
 
+    @CrossOrigin
     @RequestMapping("/houses")
     public String getHouses(Model model) {
         List<House> houses = houseService.getHouses();
@@ -41,6 +42,7 @@ public class HouseController {
         return "houses.html";
     }
 
+    @CrossOrigin
     @PostMapping("/houses/add")
     public ResponseEntity<House> addHouse(@RequestBody HouseRequest houseRequest) {
         System.out.println("Adding house \"" + houseRequest.getName() +"\"");
@@ -52,6 +54,7 @@ public class HouseController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @CrossOrigin
     @DeleteMapping("/houses/delete/{id}")
     public ResponseEntity<Long> deleteHouse(@PathVariable Long id) {
         System.out.println("Deleting house with id " + id);

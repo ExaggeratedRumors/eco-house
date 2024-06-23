@@ -39,6 +39,7 @@ public class DeviceController {
     RoomService roomService;
 
 
+    @CrossOrigin
     @PostMapping("/devices/add")
     public ResponseEntity<Device> addDevice(@RequestBody DeviceRequest deviceRequest) {
         System.out.println("Adding device \"" + deviceRequest.getName() +"\"");
