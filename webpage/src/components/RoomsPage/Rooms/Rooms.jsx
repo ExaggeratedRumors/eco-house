@@ -363,7 +363,7 @@ const Rooms = () => {
                             <div className="rooms-right-panel">
                                 {/* Remove house */}
                                 {selectedHouse && <button
-                                    onClick={() => deleteItem('http://localhost:8082/houses', selectedHouse.house_id, updateHouseAfterDelete)}>Delete
+                                    onClick={() => deleteItem('http://localhost:8082/houses/remove', selectedHouse.house_id, updateHouseAfterDelete)}>Delete
                                     House</button>}
 
                                 {/* Add house */}
@@ -375,7 +375,7 @@ const Rooms = () => {
                                         <input type="text" value={houseName} onChange={(e) => setHouseName(e.target.value)}
                                                placeholder="House Name"/>
                                         <button
-                                            onClick={() => addItem('http://localhost:8082/houses', {name: houseName}, updateHouseAfterAdd)}>Submit
+                                            onClick={() => addItem('http://localhost:8082/houses/add', {name: houseName}, updateHouseAfterAdd)}>Submit
                                         </button>
                                     </div>
                                 )}
@@ -403,7 +403,7 @@ const Rooms = () => {
                                     <div className="rooms-right-panel">
                                         {/* Remove room */}
                                         {selectedRoom && <button
-                                            onClick={() => deleteItem('http://localhost:8082/rooms', selectedRoom.id, updateRoomAfterDelete)}>Delete
+                                            onClick={() => deleteItem('http://localhost:8082/rooms/delete', selectedRoom.id, updateRoomAfterDelete)}>Delete
                                             Room</button>}
 
                                         {/* Add room */}
@@ -415,7 +415,7 @@ const Rooms = () => {
                                                 <input type="text" value={roomName}
                                                        onChange={(e) => setRoomName(e.target.value)}
                                                        placeholder="Room Name"/>
-                                                <button onClick={() => addItem('http://localhost:8082/rooms', {
+                                                <button onClick={() => addItem('http://localhost:8082/rooms/add', {
                                                     name: roomName,
                                                     house_id: selectedHouse.house_id
                                                 }, updateRoomAfterAdd)}>Submit
@@ -443,7 +443,7 @@ const Rooms = () => {
                                     <div className="rooms-right-panel">
                                         {/* Remove generator */}
                                         {selectedGenerator && <button
-                                            onClick={() => deleteItem('http://localhost:8082/generators', selectedGenerator.id, updateGeneratorAfterDelete)}>Delete
+                                            onClick={() => deleteItem('http://localhost:8082/generators/delete', selectedGenerator.id, updateGeneratorAfterDelete)}>Delete
                                             Generator</button>}
 
                                         {/* Add generator */}
@@ -455,7 +455,7 @@ const Rooms = () => {
                                                 <input type="text" value={generatorName}
                                                        onChange={(e) => setGeneratorName(e.target.value)}
                                                        placeholder="Generator Name"/>
-                                                <button onClick={() => addItem('http://localhost:8082/generators', {
+                                                <button onClick={() => addItem('http://localhost:8082/generators/add', {
                                                     name: generatorName,
                                                     house_id: selectedHouse.house_id
                                                 }, updateGeneratorAfterAdd)}>Submit
@@ -488,7 +488,7 @@ const Rooms = () => {
                                     <div className="rooms-right-panel">
                                         {/* Remove device */}
                                         {selectedDevice && <button
-                                            onClick={() => deleteItem('http://localhost:8082/devices', selectedDevice.id, updateDeviceAfterDelete)}>Delete
+                                            onClick={() => deleteItem('http://localhost:8082/devices/delete', selectedDevice.id, updateDeviceAfterDelete)}>Delete
                                             Device</button>}
 
                                         {/* Add device */}
@@ -503,7 +503,7 @@ const Rooms = () => {
                                                 <input type="number" step="0.01" value={devicePowerConsumption == 0 ? '' : devicePowerConsumption}
                                                        onChange={(e) => setDevicePowerConsumption(e.target.value)}
                                                        placeholder="Power consumption"/>
-                                                <button onClick={() => addItem('http://localhost:8082/devices', {
+                                                <button onClick={() => addItem('http://localhost:8082/devices/add', {
                                                     name: deviceName,
                                                     roomId: selectedRoom.id,
                                                     powerConsumption: devicePowerConsumption
