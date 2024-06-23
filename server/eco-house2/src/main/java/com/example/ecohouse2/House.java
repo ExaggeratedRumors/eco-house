@@ -1,8 +1,7 @@
 package com.example.ecohouse2;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonGetter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -52,6 +51,11 @@ public class House implements Serializable {
     @JoinColumn(name = "owner_id", nullable = false)
     @JsonBackReference
     private Owner owner;
+
+    @JsonGetter("dailyEnergyProduced_kWh")
+    public double calculateDailyEnergyProduced() {
+        return generators.stream().mapToDouble(Generator::dailyEnergyProduced_kWh).sum();
+    }
 
     @OneToMany(mappedBy = "house", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<Generator> generators = new LinkedHashSet<>();

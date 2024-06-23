@@ -53,9 +53,9 @@ Content-Type: application/json
 {
   "houseId": 1,
   "name": "Generator 1",
-  "panelSurface": 10,
   "effectiveness": 0.5,
-  "batteryCapacity": 100
+  "batteryCapacity": 100,
+  "wattage": 300
 }
 
 ### add intervals
@@ -64,6 +64,6 @@ Content-Type: application/json
 
 {
   "deviceId": 1,
-  "timeStart": "2020-01-01T00:00:00",
-  "timeEnd": "2020-01-01T01:00:00"
+  "timeStart": "03:00",
+  "timeEnd": "04:00"
 }
