@@ -1,7 +1,7 @@
 package com.example.ecohouse2.controllers;
 
 import com.example.ecohouse2.House;
-import com.example.ecohouse2.Owner;
+import com.example.ecohouse2.dto.GraphRequest;
 import com.example.ecohouse2.services.DeviceService;
 import com.example.ecohouse2.services.GeneratorService;
 import com.example.ecohouse2.services.HouseService;
@@ -14,6 +14,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+
 import com.example.ecohouse2.dto.HouseRequest;
 
 /**
@@ -43,6 +45,34 @@ public class HouseController {
     }
 
     @CrossOrigin
+    @GetMapping("/dailyPowerGraph")
+    public ResponseEntity<Map<String, Double>> getDailyPowerGraph(@RequestBody GraphRequest graphRequest) {
+        House house = houseService.getHouse(graphRequest.getHouseId());
+        return new ResponseEntity<>(house.calculateDailyEnergyConsumed(), HttpStatus.OK);
+    }
+
+    @CrossOrigin
+    @GetMapping("/dailyCostsGraph")
+    public ResponseEntity<Map<String, Double>> getDailyCostsGraph(@RequestBody GraphRequest graphRequest) {
+        House house = houseService.getHouse(graphRequest.getHouseId());
+        return new ResponseEntity<>(house.calculateDailyCost(), HttpStatus.OK);
+    }
+
+    @CrossOrigin
+    @GetMapping("/dailyCost")
+    public ResponseEntity<Double> getDailyCost(@RequestBody GraphRequest graphRequest) {
+        House house = houseService.getHouse(graphRequest.getHouseId());
+        return new ResponseEntity<>(house.calculateDailyCostSum(), HttpStatus.OK);
+    }
+
+    @CrossOrigin
+    @GetMapping("/dailyEnergyProduced")
+    public ResponseEntity<Double> getDailyEnergyGenerated(@RequestBody GraphRequest graphRequest) {
+        House house = houseService.getHouse(graphRequest.getHouseId());
+        return new ResponseEntity<>(house.calculateDailyEnergyProduced(), HttpStatus.OK);
+    }
+
+    @CrossOrigin
     @PostMapping("/houses/add")
     public ResponseEntity<House> addHouse(@RequestBody HouseRequest houseRequest) {
         System.out.println("Adding house \"" + houseRequest.getName() +"\"");
@@ -64,15 +94,4 @@ public class HouseController {
         System.out.println("House deleted");
         return new ResponseEntity<>(id, HttpStatus.OK);
     }
-
-    //@PostMapping("/courses/grades/add/{deviceName}")
-    //public ResponseEntity<Long> addGrade(@PathVariable String deviceName) {
-    //     System.out.println("Adding device " + deviceName);
-    //     Device result = deviceService.addDevice(deviceName);
-    //     if(result == null)
-    //         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    //     System.out.println("Device added");
-    //     return new ResponseEntity<>(HttpStatus.OK);
-    //}
-
 }

@@ -2,12 +2,13 @@
 GET http://localhost:8082/owners/1
 
 
+
 ### add owner
 POST http://localhost:8082/owners/add
 Content-Type: application/json
 
 {
-  "password": "hunter2",
+"password": "hunter2",
   "email": "e@mail.com",
   "name": "Maciek",
   "surname": "WisłaKraków"
@@ -21,9 +22,10 @@ Content-Type: application/json
   "ownerId": 1,
   "address": "Wlokniarzy",
   "name": "Domek 1",
-  "daytimeTariff": 0.2,
-  "nightTariff": 0.1
+  "daytimeTariff": 0.5803,
+  "nightTariff": 0.3672
 }
+
 
 
 
@@ -43,8 +45,19 @@ Content-Type: application/json
 {
   "roomId": 1,
   "name": "Lampka",
-  "powerConsumption": 10
+  "powerConsumption": 200
 }
+
+### add device
+POST http://localhost:8082/devices/add
+Content-Type: application/json
+
+{
+  "roomId": 1,
+  "name": "Lampka2",
+  "powerConsumption": 400
+}
+
 
 ### add generator
 POST http://localhost:8082/generators/add
@@ -58,12 +71,54 @@ Content-Type: application/json
   "wattage": 300
 }
 
-### add intervals
+### add interval1
 POST http://localhost:8082/intervals/add
 Content-Type: application/json
 
 {
   "deviceId": 1,
-  "timeStart": "03:00",
-  "timeEnd": "04:00"
+  "timeStart": "09:00",
+  "timeEnd": "11:00"
+}
+
+### add interval2
+POST http://localhost:8082/intervals/add
+Content-Type: application/json
+
+{
+  "deviceId": 2,
+  "timeStart": "07:00",
+  "timeEnd": "10:00"
+}
+
+### get daily power graph
+GET http://localhost:8082/dailyPowerGraph
+Content-Type: application/json
+
+{
+  "houseId": 1
+}
+
+### get daily costs graph
+GET http://localhost:8082/dailyCostsGraph
+Content-Type: application/json
+
+{
+  "houseId": 1
+}
+
+### get daily cost
+GET http://localhost:8082/dailyCost
+Content-Type: application/json
+
+{
+  "houseId": 1
+}
+
+### get daily energy produced
+GET http://localhost:8082/dailyEnergyProduced
+Content-Type: application/json
+
+{
+  "houseId": 1
 }
