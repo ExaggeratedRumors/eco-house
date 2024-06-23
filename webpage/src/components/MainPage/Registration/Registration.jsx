@@ -3,11 +3,26 @@ import "./Registration.css";
 import {Formik} from 'formik';
 import {FaCertificate, FaEnvelopeOpen, FaRegistered} from "react-icons/fa";
 import {Link} from "react-router-dom";
+import { register, login } from './authService';
 
 const Registration = () => {
+    const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
     const [isRegistering, setIsRegistering] = useState(false);
     const [data, setData] = useState(null)
     const [userId, setUserId] = useState(null)
+
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleLogin = (token) => {
+        localStorage.setItem('token', token);
+        setIsAuthenticated(true);
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        setIsAuthenticated(false);
+    };
 
     useEffect(() => {
 
