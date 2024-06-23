@@ -166,21 +166,21 @@ const Rooms = () => {
     const [showAddIntervalForm, setShowAddIntervalForm] = useState(false);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch('http://localhost:8082/owners/1');
-                if (!response.ok) {
-                    throw new Error('Service not available');
-                }
-                const data = await response.json();
-                setOwnerData(data);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
         fetchData();
     }, [])
 
+    const fetchData = async () => {
+        try {
+            const response = await fetch('http://localhost:8082/owners/1');
+            if (!response.ok) {
+                throw new Error('Service not available');
+            }
+            const data = await response.json();
+            setOwnerData(data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
 
     /** Manipulate items **/
     const deleteItem = async (endpoint, id, updateFunction) => {
@@ -326,6 +326,7 @@ const Rooms = () => {
     };
 
     const updateIntervalAfterAdd = (newInterval) => {
+        fetchData();
         setSelectedDevice(prevDevice => ({
             ...prevDevice,
             intervals: [...prevDevice.intervals, newInterval],
@@ -348,6 +349,7 @@ const Rooms = () => {
             <div className="room-container">
                 <div className="container">
                     <div className="select-box">
+                        <hr className="room-hr"></hr>
                         <h2>Houses</h2>
                         <div className="rooms-panel">
                             <div className="rooms-left-panel">
@@ -372,7 +374,8 @@ const Rooms = () => {
                                 </button>
                                 {showAddHouseForm && (
                                     <div className="add-form">
-                                        <input type="text" value={houseName} onChange={(e) => setHouseName(e.target.value)}
+                                        <input type="text" value={houseName}
+                                               onChange={(e) => setHouseName(e.target.value)}
                                                placeholder="House Name"/>
                                         <button
                                             onClick={() => addItem('http://localhost:8082/houses/add', {name: houseName}, updateHouseAfterAdd)}>Submit
@@ -388,6 +391,7 @@ const Rooms = () => {
                     {selectedHouse && (
                         <>
                             <div className="select-box">
+                                <hr className="room-hr"></hr>
                                 <h2>Rooms</h2>
                                 <div className="rooms-panel">
                                     <div className="rooms-left-panel">
@@ -428,6 +432,7 @@ const Rooms = () => {
 
 
                             <div className="select-box">
+                            <hr className="room-hr"></hr>
                                 <h2>Generators</h2>
                                 <div className="rooms-panel">
                                     <div className="rooms-left-panel">
@@ -447,7 +452,8 @@ const Rooms = () => {
                                             Generator</button>}
 
                                         {/* Add generator */}
-                                        <button onClick={() => toggleForm(setShowAddGeneratorForm, showAddGeneratorForm)}>
+                                        <button
+                                            onClick={() => toggleForm(setShowAddGeneratorForm, showAddGeneratorForm)}>
                                             {showAddGeneratorForm ? 'Hide' : 'Add Generator'}
                                         </button>
                                         {showAddGeneratorForm && (
@@ -473,6 +479,7 @@ const Rooms = () => {
                     {selectedRoom && (
                         <>
                             <div className="select-box">
+                                <hr className="room-hr"></hr>
                                 <h2>Devices</h2>
                                 <div className="rooms-panel">
                                     <div className="rooms-left-panel">
@@ -500,7 +507,8 @@ const Rooms = () => {
                                                 <input type="text" value={deviceName}
                                                        onChange={(e) => setDeviceName(e.target.value)}
                                                        placeholder="Device Name"/>
-                                                <input type="number" step="0.01" value={devicePowerConsumption == 0 ? '' : devicePowerConsumption}
+                                                <input type="number" step="0.01"
+                                                       value={devicePowerConsumption == 0 ? '' : devicePowerConsumption}
                                                        onChange={(e) => setDevicePowerConsumption(e.target.value)}
                                                        placeholder="Power consumption"/>
                                                 <button onClick={() => addItem('http://localhost:8082/devices/add', {
@@ -519,6 +527,7 @@ const Rooms = () => {
                             {/* Intervals */}
                             {selectedDevice && (
                                 <div className="select-box">
+                                    <hr class="room-hr"></hr>
                                     <h2>Working intervals</h2>
                                     <div className="rooms-panel">
                                         <div className="rooms-left-panel">
@@ -553,11 +562,12 @@ const Rooms = () => {
                                                     <input type="text" value={intervalEndTime}
                                                            onChange={(e) => setIntervalEndtime(e.target.value)}
                                                            placeholder="End Time"/>
-                                                    <button onClick={() => addItem('http://localhost:8082/intervals', {
-                                                        timeStart: intervalStartTime,
-                                                        timeEnd: intervalEndTime,
-                                                        device_id: selectedDevice.id
-                                                    }, updateIntervalAfterAdd)}>Submit
+                                                    <button
+                                                        onClick={() => addItem('http://localhost:8082/intervals/add', {
+                                                            timeStart: intervalStartTime,
+                                                            timeEnd: intervalEndTime,
+                                                            deviceId: selectedDevice.id
+                                                        }, updateIntervalAfterAdd)}>Submit
                                                     </button>
                                                 </div>
                                             )}

@@ -9,5 +9,12 @@ Postgres database for EcoHouse+ project.
 3. Create database by console:
 
 ```bash
-psql -U postgres -d eco-dom -f "database.sql"
+psql -U postgres -d eco-dom -f "tables.sql"
+
+or:
+
+psql -U postgres -W
+\c eco-dom
+\i clear.sql
+\i tables.sql
 ```
