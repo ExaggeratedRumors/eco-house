@@ -23,7 +23,6 @@ const RoomChart = ({ devicesData }) => {
 
     console.log(transformedData);
 
-
     const series = transformedData.map((device) => ({
         name: device.name,
         data: device.data.map((interval) => ({
