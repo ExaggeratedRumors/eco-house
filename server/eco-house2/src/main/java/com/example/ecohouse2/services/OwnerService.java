@@ -6,6 +6,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
@@ -15,11 +16,13 @@ public class OwnerService {
 
     @Autowired
     private OwnerRepository userRepo;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
 
     public Owner addOwner(Owner owner) {
         return userRepo.save(owner);
     }
-
 
     public List<Owner> getUsers() {
         return userRepo.findAll();
@@ -31,6 +34,9 @@ public class OwnerService {
         return true;
     }
 
+    public Owner findOwnerByEmail(String email) {
+        return userRepo.findyByEmail(email);
+    }
 
     public Owner getOwner(Long index) {
         return userRepo.findById(index).orElseThrow(
