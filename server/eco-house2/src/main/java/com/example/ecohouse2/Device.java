@@ -23,7 +23,7 @@ public class Device {
     private String name;
 
     @Column(name = "power_consumption_per_hour", nullable = false)
-    private Double powerConsumptionPerHour;
+    private Double powerConsumptionPerHour; // in watts
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "room_id", nullable = false)

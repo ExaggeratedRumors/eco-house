@@ -14,17 +14,17 @@ import java.io.Serializable;
 public class GeneratorRequest implements Serializable {
     private String name;
     private Long houseId;
-    private Double panelSurface;
     private Double effectiveness;
     private Double batteryCapacity;
+    private Double wattage;
 
 
     public Generator toGenerator(){
         Generator generator = new Generator();
         generator.setName(this.name);
-        generator.setPanelSurface(this.panelSurface);
         generator.setEffectiveness(this.effectiveness);
         generator.setBatteryCapacity(this.batteryCapacity);
+        generator.setWattage(this.wattage);
         return generator;
     }
 }

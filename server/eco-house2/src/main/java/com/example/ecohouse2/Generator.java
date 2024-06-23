@@ -18,18 +18,25 @@ public class Generator {
     @Column(name = "name", nullable = false, length = Integer.MAX_VALUE)
     private String name;
 
-    @Column(name = "panel_surface", nullable = false)
-    private Double panelSurface;
-
     @Column(name = "effectiveness", nullable = false)
     private Double effectiveness;
 
     @Column(name = "battery_capacity", nullable = false)
     private Double batteryCapacity;
 
+    @Column(name = "wattage", nullable = false)
+    private Double wattage;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "house_id", nullable = false)
     @JsonBackReference
     private House house;
 
+
+    //calculate energy produced by generator in one day
+    //@JsonGetter("energyProduced")
+    public double dailyEnergyProduced_kWh() {
+        double hoursOfSunlight = 5.0;
+        return (hoursOfSunlight * this.wattage) * this.effectiveness / 1000.0;
+    }
 }
