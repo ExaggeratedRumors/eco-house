@@ -3,49 +3,29 @@ import "./Registration.css";
 import {Formik} from 'formik';
 import {FaCertificate, FaEnvelopeOpen, FaRegistered} from "react-icons/fa";
 import {Link} from "react-router-dom";
+import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
 const Registration = () => {
+    const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
     const [isRegistering, setIsRegistering] = useState(false);
     const [data, setData] = useState(null)
     const [userId, setUserId] = useState(null)
 
-    useEffect(() => {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
 
-        /*const handleSubmit = async (e) => {
-            try {
-                e.preventDefault();
-                const response = await fetch("http://localhost:8081/", {
-                    method: "POST",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify({imageName, login, password}),
-                });
-                const blob = await response.blob();
-                const imageObjectURL = URL.createObjectURL(blob);
-                setImage(imageObjectURL);
-            } catch (err) {
-                setError('Error fetching the image');
-            }
+    const handleLogin = (token) => {
+        localStorage.setItem('token', token);
+        setIsAuthenticated(true);
+    };
 
-        };*/
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        setIsAuthenticated(false);
+    };
 
-        const fetchData = async () => {
-            try {
-                console.log("pass 1")
-                const response = await fetch('http://localhost:8082/owners/1');
-                console.log("pass 2")
-                if (!response.ok) {
-                    throw new Error('Service not available');
-                }
-                const data = await response.json();
-                console.log("pass 3")
-                setData(data);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
-
-        fetchData();
-    }, []);
+    const navigate = useNavigate();
 
     const handleToggleMode = () => {
         setIsRegistering(!isRegistering);
@@ -65,7 +45,7 @@ const Registration = () => {
 
                         <div id="registration">
                             <Formik
-                                initialValues={{name: "", email: '', address: '', password: '', confirmPassword: ''}}
+                                initialValues={{name: "", surname: '', email: '', password: '', confirmPassword: ''}}
                                 validate={values => {
                                     const errors = {};
 
@@ -75,16 +55,16 @@ const Registration = () => {
                                         errors.name = "Invalid name format";
                                     }
 
+                                    if (!values.surname) {
+                                        errors.surname = "Surname is required";
+                                    }
+
                                     if (!values.email) {
                                         errors.email = 'Email is required';
                                     } else if (
                                         !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
                                     ) {
                                         errors.email = 'Invalid email address';
-                                    }
-
-                                    if (!values.address) {
-                                        errors.address = "Address is required";
                                     }
 
                                     if (!values.password) {
@@ -102,11 +82,19 @@ const Registration = () => {
                                     }
                                     return errors;
                                 }}
-                                onSubmit={(values, {setSubmitting}) => {
-                                    setTimeout(() => {
-                                        alert(JSON.stringify(values, null, 2));
-                                        setSubmitting(false);
-                                    }, 400);
+                                onSubmit={ async (values, {setSubmitting}) => {
+                                    try {
+                                        const { confirmPassword, ...valuesToSend } = values;
+                                        await axios.post('http://localhost:8082/api/register', valuesToSend, {
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                            },
+                                        });
+                                        navigate('/');
+                                    } catch (error) {
+                                        console.error('Error registering:', error);
+                                    }
+                                    setSubmitting(false);
                                 }}
                             >
                                 {({
@@ -128,19 +116,19 @@ const Registration = () => {
                                         </div>
 
                                         <div className='form-elem'>
+                                            <input type="text" name="surname" onChange={handleChange}
+                                                   onBlur={handleBlur}
+                                                   value={values.surname} placeholder="Surname"
+                                                   className="form-control"/>
+                                            <span
+                                                className='form-control-text'>{errors.surname && touched.surname && errors.surname}</span>
+                                        </div>
+
+                                        <div className='form-elem'>
                                             <input type="email" name="email" onChange={handleChange} onBlur={handleBlur}
                                                    value={values.email} placeholder="Email" className="form-control"/>
                                             <span
                                                 className='form-control-text'>{errors.email && touched.email && errors.email}</span>
-                                        </div>
-
-                                        <div className='form-elem'>
-                                            <input type="text" name="address" onChange={handleChange}
-                                                   onBlur={handleBlur}
-                                                   value={values.address} placeholder="Address"
-                                                   className="form-control"/>
-                                            <span
-                                                className='form-control-text'>{errors.address && touched.address && errors.address}</span>
                                         </div>
 
                                         <div className='form-elem'>
@@ -173,11 +161,13 @@ const Registration = () => {
                 )}
 
                 {(
-                    <div className={`auth-content login-section bg-semi-transparent ${isRegistering ? 'fade-out' : 'fade-in'}`}>
+                    <div
+                        className={`auth-content login-section bg-semi-transparent ${isRegistering ? 'fade-out' : 'fade-in'}`}>
                         <div className='section-t'>
                             <h3>login</h3>
                             <p className='text auth-text'>If you do not have account,&nbsp;
-                                <button type='button' className='form-login-link' onClick={handleToggleMode}> Switch to Registration</button>
+                                <button type='button' className='form-login-link' onClick={handleToggleMode}> Switch to
+                                    Registration</button>
                             </p>
                         </div>
 
@@ -197,11 +187,22 @@ const Registration = () => {
 
                                     return errors;
                                 }}
-                                onSubmit={(values, {setSubmitting}) => {
-                                    setTimeout(() => {
-                                        alert(JSON.stringify(values, null, 2));
-                                        setSubmitting(false);
-                                    }, 400);
+                                onSubmit={ async (values, {setSubmitting}) => {
+                                    try {
+                                        const response = await axios.post('http://localhost:8082/api/login', values, {
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                            },
+                                        });
+                                        console.log("Response: " + response)
+                                        console.log("Save token: " + response.data.token)
+                                        localStorage.setItem('token', response.data.token);
+                                        localStorage.setItem('id', response.data.id);
+                                        navigate('/rooms');
+                                    } catch (error) {
+                                        console.error('Error logging in:', error);
+                                    }
+                                    setSubmitting(false);
                                 }}
                             >
                                 {({
@@ -212,7 +213,6 @@ const Registration = () => {
                                       handleBlur,
                                       handleSubmit,
                                       isSubmitting,
-                                      /* and other goodies */
                                   }) => (
                                     <form onSubmit={handleSubmit}>
                                         <div className='form-elem'>
