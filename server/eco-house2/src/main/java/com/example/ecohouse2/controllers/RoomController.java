@@ -36,7 +36,7 @@ public class RoomController {
     @Autowired
     RoomService roomService;
 
-
+    @CrossOrigin
     @PostMapping("/rooms/add")
     public ResponseEntity<Room> addRoom(@RequestBody RoomRequest roomRequest) {
         System.out.println("Adding room \"" + roomRequest.getName() +"\"");

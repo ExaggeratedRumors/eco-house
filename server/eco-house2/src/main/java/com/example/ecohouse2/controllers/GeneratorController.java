@@ -39,6 +39,7 @@ public class GeneratorController {
     RoomService roomService;
 
 
+    @CrossOrigin
     @PostMapping("/generators/add")
     public ResponseEntity<Generator> addGenerator(@RequestBody GeneratorRequest generatorRequest) {
         System.out.println("Adding generator \"" + generatorRequest.getName() +"\"");
