@@ -14,9 +14,11 @@ function MainPage() {
                 <div className="left-content">
                     <Header/>
                 </div>
-                <div className="right-content">
-                    <Registration/>
-                </div>
+                {localStorage.getItem('token') ? ("") : (
+                    <div className="right-content">
+                        <Registration/>
+                    </div>
+                )}
             </div>
             <Footer/>
         </div>

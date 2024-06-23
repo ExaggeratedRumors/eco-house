@@ -16,9 +16,9 @@ public class OwnerService {
 
     @Autowired
     private OwnerRepository userRepo;
+/*
     @Autowired
-    private PasswordEncoder passwordEncoder;
-
+    private PasswordEncoder passwordEncoder;*/
 
     public Owner addOwner(Owner owner) {
         return userRepo.save(owner);
@@ -35,8 +35,12 @@ public class OwnerService {
     }
 
     public Owner findOwnerByEmail(String email) {
-        return userRepo.findyByEmail(email);
+        return userRepo.findByEmail(email);
     }
+
+/*    public boolean checkPassword(Owner owner, String rawPassword) {
+        return passwordEncoder.matches(rawPassword, owner.getPassword());
+    }*/
 
     public Owner getOwner(Long index) {
         return userRepo.findById(index).orElseThrow(

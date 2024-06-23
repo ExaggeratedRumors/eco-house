@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import "./Rooms.css";
 import RoomsChart from "./RoomsChart";
+import axios from "axios";
 
 const Rooms = () => {
     const [ownerData, setOwnerData] = useState(null);
@@ -43,21 +44,29 @@ const Rooms = () => {
     const [showAddDeviceForm, setShowAddDeviceForm] = useState(false);
     const [showAddIntervalForm, setShowAddIntervalForm] = useState(false);
 
+    /** Token **/
+    let token = localStorage.getItem('token');
 
     /** Functions **/
-
     useEffect(() => {
         fetchData();
     }, [])
 
     const fetchData = async () => {
+        token = localStorage.getItem('token');
+        if (!token) {
+            console.error('No token found');
+            return;
+        }
+        console.log("Token:" + token)
         try {
-            const response = await fetch('http://localhost:8082/owners/1');
-            if (!response.ok) {
-                throw new Error('Service not available');
-            }
-            const data = await response.json();
-            setOwnerData(data);
+            const id = localStorage.getItem('id');
+            const response = await axios.get('http://localhost:8082/owners/' + id, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+            setOwnerData(response.data);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -73,15 +82,12 @@ const Rooms = () => {
     /** Manipulate items **/
     const deleteItem = async (endpoint, id, updateFunction) => {
         try {
-            const response = await fetch(`${endpoint}/${id}`, {
-                method: 'DELETE',
+            const response = await axios.delete(`${endpoint}/${id}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                }
             });
-            if (response.ok) {
-                alert(`Item with id ${id} deleted successfully`);
-                updateFunction();
-            } else {
-                alert(`Failed to delete item: ${response.statusText}`);
-            }
+            updateFunction();
         } catch (error) {
             alert(`Error deleting item: ${error}`);
         }
@@ -92,17 +98,17 @@ const Rooms = () => {
             const response = await fetch(endpoint, {
                 method: 'POST',
                 headers: {
+                    Authorization: `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(body),
             });
-            if (response.ok) {
-                const newItem = await response.json();
-                updateFunction(newItem);
-                alert('Item added successfully');
-            } else {
-                alert(`Failed to add item: ${response.statusText}`);
+            if (!response.ok) {
+                throw new Error(`Error adding item: ${response.statusText}`);
             }
+            const newItem = await response.json();
+            updateFunction(newItem);
+            //alert('Item added successfully: ' + newItem);
         } catch (error) {
             alert(`Error adding item: ${error}`);
         }
@@ -214,6 +220,19 @@ const Rooms = () => {
     };
 
     const updateIntervalAfterAdd = (newInterval) => {
+        setSelectedRoom(prevRoom => ({
+            ...prevRoom,
+            devices: prevRoom.devices.map(device => {
+                if (device.id === selectedDevice.id) {
+                    return {
+                        ...device,
+                        intervals: [...device.intervals, newInterval],
+                    };
+                }
+                return device;
+            }),
+        }));
+
         setSelectedDevice(prevDevice => ({
             ...prevDevice,
             intervals: [...prevDevice.intervals, newInterval],
@@ -242,7 +261,7 @@ const Rooms = () => {
                             <div className="rooms-left-panel">
                                 <select id="houses" onChange={handleHouseChange}>
                                     <option value="">Select a house</option>
-                                    {ownerData.houses.map((house) => (
+                                    {ownerData && ownerData.houses && ownerData.houses.map((house) => (
                                         <option key={house.house_id} value={house.house_id}>
                                             {house.name}
                                         </option>
@@ -251,12 +270,12 @@ const Rooms = () => {
                             </div>
                             <div className="rooms-right-panel">
                                 {/* Remove house */}
-                                {selectedHouse && <button
+                                {selectedHouse && <button class="room-button"
                                     onClick={() => deleteItem('http://localhost:8082/houses/remove', selectedHouse.house_id, updateHouseAfterDelete)}>Delete
                                     House</button>}
 
                                 {/* Add house */}
-                                <button onClick={() => toggleForm(setShowAddHouseForm, showAddHouseForm)}>
+                                <button class="room-button" onClick={() => toggleForm(setShowAddHouseForm, showAddHouseForm)}>
                                     {showAddHouseForm ? 'Hide' : 'Add House'}
                                 </button>
                                 {showAddHouseForm && (
@@ -273,7 +292,7 @@ const Rooms = () => {
                                         <input type="number" step="0.01" value={houseNightTariff === 0 ? '' : houseNightTariff}
                                                onChange={(e) => setHouseNightTariff(e.target.value)}
                                                placeholder="House night tariff"/>
-                                        <button
+                                        <button class="room-button"
                                             onClick={() => addItem('http://localhost:8082/houses/add',
                                                 {
                                                     ownerId: ownerData.owner_id,
@@ -309,12 +328,12 @@ const Rooms = () => {
                                     </div>
                                     <div className="rooms-right-panel">
                                         {/* Remove room */}
-                                        {selectedRoom && <button
+                                        {selectedRoom && <button class="room-button"
                                             onClick={() => deleteItem('http://localhost:8082/rooms/delete', selectedRoom.id, updateRoomAfterDelete)}>Delete
                                             Room</button>}
 
                                         {/* Add room */}
-                                        <button onClick={() => toggleForm(setShowAddRoomForm, showAddRoomForm)}>
+                                        <button class="room-button" onClick={() => toggleForm(setShowAddRoomForm, showAddRoomForm)}>
                                             {showAddRoomForm ? 'Hide' : 'Add Room'}
                                         </button>
                                         {showAddRoomForm && (
@@ -322,7 +341,7 @@ const Rooms = () => {
                                                 <input type="text" value={roomName}
                                                        onChange={(e) => setRoomName(e.target.value)}
                                                        placeholder="Room Name"/>
-                                                <button onClick={() => addItem('http://localhost:8082/rooms/add', {
+                                                <button class="room-button" onClick={() => addItem('http://localhost:8082/rooms/add', {
                                                     name: roomName,
                                                     houseId: selectedHouse.house_id
                                                 }, updateRoomAfterAdd)}>Submit
@@ -350,12 +369,12 @@ const Rooms = () => {
                                     </div>
                                     <div className="rooms-right-panel">
                                         {/* Remove generator */}
-                                        {selectedGenerator && <button
+                                        {selectedGenerator && <button class="room-button"
                                             onClick={() => deleteItem('http://localhost:8082/generators/delete', selectedGenerator.id, updateGeneratorAfterDelete)}>Delete
                                             Generator</button>}
 
                                         {/* Add generator */}
-                                        <button
+                                        <button class="room-button"
                                             onClick={() => toggleForm(setShowAddGeneratorForm, showAddGeneratorForm)}>
                                             {showAddGeneratorForm ? 'Hide' : 'Add Generator'}
                                         </button>
@@ -374,7 +393,7 @@ const Rooms = () => {
                                                        onChange={(e) => setGeneratorWattage(e.target.value)}
                                                        placeholder="Generator wattage"/>
 
-                                                <button onClick={() => addItem('http://localhost:8082/generators/add', {
+                                                <button class="room-button" onClick={() => addItem('http://localhost:8082/generators/add', {
                                                     name: generatorName,
                                                     houseId: selectedHouse.house_id,
                                                     wattage: generatorWattage,
@@ -410,12 +429,12 @@ const Rooms = () => {
                                     </div>
                                     <div className="rooms-right-panel">
                                         {/* Remove device */}
-                                        {selectedDevice && <button
+                                        {selectedDevice && <button class="room-button"
                                             onClick={() => deleteItem('http://localhost:8082/devices/delete', selectedDevice.id, updateDeviceAfterDelete)}>Delete
                                             Device</button>}
 
                                         {/* Add device */}
-                                        <button onClick={() => toggleForm(setShowAddDeviceForm, showAddDeviceForm)}>
+                                        <button class="room-button" onClick={() => toggleForm(setShowAddDeviceForm, showAddDeviceForm)}>
                                             {showAddDeviceForm ? 'Hide' : 'Add Device'}
                                         </button>
                                         {showAddDeviceForm && (
@@ -427,7 +446,7 @@ const Rooms = () => {
                                                        value={devicePowerConsumption === 0 ? '' : devicePowerConsumption}
                                                        onChange={(e) => setDevicePowerConsumption(e.target.value)}
                                                        placeholder="Power consumption"/>
-                                                <button onClick={() => addItem('http://localhost:8082/devices/add', {
+                                                <button class="room-button" onClick={() => addItem('http://localhost:8082/devices/add', {
                                                     name: deviceName,
                                                     roomId: selectedRoom.id,
                                                     powerConsumption: devicePowerConsumption
@@ -460,13 +479,13 @@ const Rooms = () => {
                                         <div className="rooms-right-panel">
                                             {/* Remove interval */}
 
-                                            {selectedInterval && <button
+                                            {selectedInterval && <button class="room-button"
                                                 onClick={() => deleteItem('http://localhost:8082/intervals', selectedInterval.id, updateIntervalAfterDelete)}>Delete
                                                 Interval</button>}
 
                                             {/* Add interval */}
 
-                                            <button
+                                            <button class="room-button"
                                                 onClick={() => toggleForm(setShowAddIntervalForm, showAddIntervalForm)}>
                                                 {showAddIntervalForm ? 'Hide' : 'Add Interval'}
                                             </button>
@@ -478,7 +497,7 @@ const Rooms = () => {
                                                     <input type="text" value={intervalEndTime}
                                                            onChange={(e) => setIntervalEndtime(e.target.value)}
                                                            placeholder="End Time"/>
-                                                    <button
+                                                    <button class="room-button"
                                                         onClick={() => addItem('http://localhost:8082/intervals/add', {
                                                             timeStart: formatTime(intervalStartTime),
                                                             timeEnd: formatTime(intervalEndTime),

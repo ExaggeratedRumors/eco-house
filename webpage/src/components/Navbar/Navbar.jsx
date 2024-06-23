@@ -6,6 +6,7 @@ import {IoMdRocket} from "react-icons/io";
 import {FaDoorClosed} from "react-icons/fa6";
 import {GiLogging} from "react-icons/gi";
 import {GoSignOut} from "react-icons/go";
+import axios from "axios";
 
 const Navbar = () => {
 
@@ -14,7 +15,19 @@ const Navbar = () => {
         setNavToggle(toggle => !toggle);
     }
 
-  return (
+    const handleLogout = async () => {
+        try {
+            localStorage.removeItem('token');
+            window.location.reload();
+            await axios.post('http://localhost:8082/api/logout');
+            console.log('Logged out successfully');
+        } catch (error) {
+
+            console.error('Error logging out:', error);
+        }
+    };
+
+    return (
     <nav className='navbar w-100 flex'>
         <div className='container w-100'>
             <div className='navbar-content flex fw-7'>
@@ -42,9 +55,11 @@ const Navbar = () => {
                             <li className='text-white'>
                                 <Link to="/help">Help</Link>
                             </li>
+                            {localStorage.getItem('token')  ? (
                             <li className='text-white'>
-                                <Link to="/"><GoSignOut/> Log out</Link>
+                                <Link onClick={handleLogout} to="/"><GoSignOut/> Log out</Link>
                             </li>
+                            ) : ( "" )}
                         </ul>
                     </div>
                 </div>
