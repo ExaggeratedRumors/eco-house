@@ -62,8 +62,9 @@ public class OwnerController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+
     @CrossOrigin
-    @DeleteMapping("/owners/delete/{id}")
+    @DeleteMapping("/owners/remove/{id}")
     public ResponseEntity<Long> deleteOwner(@PathVariable Long id) {
         System.out.println("Deleting owner with id " + id);
         Boolean result = ownerService.deleteOwner(id);

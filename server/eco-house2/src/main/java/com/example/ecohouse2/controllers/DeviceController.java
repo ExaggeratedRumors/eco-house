@@ -56,7 +56,19 @@ public class DeviceController {
     }
 
     @CrossOrigin
-    @DeleteMapping("/devices/delete/{id}")
+    @PatchMapping("/devices/update")
+    public ResponseEntity<Device> updateDevice(@RequestBody DeviceRequest deviceRequest) {
+        System.out.println("Updating device with id " + deviceRequest.getId());
+        Device result = deviceService.updateDevice(deviceRequest);
+        if(result == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        System.out.println("Device updated");
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @CrossOrigin
+    @DeleteMapping("/devices/remove/{id}")
     public ResponseEntity<Long> deleteDevice(@PathVariable Long id) {
         System.out.println("Deleting device with id " + id);
         Boolean result = deviceService.deleteDevice(id);

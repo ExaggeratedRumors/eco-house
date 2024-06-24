@@ -1,6 +1,7 @@
 package com.example.ecohouse2.services;
 
 import com.example.ecohouse2.Owner;
+import com.example.ecohouse2.dto.OwnerRequest;
 import com.example.ecohouse2.repositories.OwnerRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -45,5 +46,14 @@ public class OwnerService {
         return userRepo.findById(index).orElseThrow(
                 () -> new EntityNotFoundException("Owner not found with id " + index)
         );
+    }
+
+    public Owner updateOwner(OwnerRequest ownerRequest) {
+        return null;
+//        Owner owner = getOwner(ownerRequest.getId());
+//        owner.setName(ownerRequest.getName());
+//        owner.setEmail(ownerRequest.getEmail());
+//        owner.setPassword(ownerRequest.getPassword());
+//        return userRepo.save(owner);
     }
 }

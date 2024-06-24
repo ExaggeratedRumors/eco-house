@@ -46,7 +46,20 @@ public class IntervalController {
     }
 
     @CrossOrigin
-    @DeleteMapping("/intervals/delete/{id}")
+    @PatchMapping("/intervals/update")
+    public ResponseEntity<Interval> updateInterval(@RequestBody IntervalRequest intervalRequest) {
+        System.out.println("Updating interval with id " + intervalRequest.getId());
+
+        Interval result = intervalService.updateInterval(intervalRequest);
+        if(result == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        System.out.println("Interval updated with id " + result.getId() + " to device with id " + result.getDevice().getId());
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @CrossOrigin
+    @DeleteMapping("/intervals/remove/{id}")
     public ResponseEntity<Long> deleteInterval(@PathVariable Long id) {
         System.out.println("Deleting interval with id " + id);
         Boolean result = intervalService.deleteInterval(id);

@@ -22,8 +22,8 @@ public class RoomService {
     private HouseRepository houseRepo;
 
     public Room addRoom(RoomRequest roomRequest) {
-        House house = houseRepo.findById(roomRequest.getHouseId()).orElseThrow(
-                () -> new EntityNotFoundException("House not found with id " + roomRequest.getHouseId()));
+        House house = houseRepo.findById(roomRequest.getId()).orElseThrow(
+                () -> new EntityNotFoundException("House not found with id " + roomRequest.getId()));
         Room newRoom = roomRequest.toRoom();
         newRoom.setHouse(house);
         System.out.println("Attempt to add room to house: " + house.getHouse_id() + " " + house.getName());
@@ -47,7 +47,15 @@ public class RoomService {
 
     public boolean doesRoomExist(RoomRequest room) {
         String name = room.getName();
-        Long houseID = room.getHouseId();
+        Long houseID = room.getId();
         return roomRepo.doesRoomExist(name, houseID);
     }
+
+    public Room updateRoom(RoomRequest roomRequest) {
+        Room room = getRoom(roomRequest.getId());
+        if (room == null) return null;
+        room.setName(roomRequest.getName());
+        return roomRepo.save(room);
+    }
+
 }

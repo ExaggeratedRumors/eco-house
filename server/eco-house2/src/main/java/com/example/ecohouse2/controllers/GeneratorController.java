@@ -54,8 +54,18 @@ public class GeneratorController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @PatchMapping("/generators/update")
+    public ResponseEntity<Generator> updateGenerator(@RequestBody GeneratorRequest generatorRequest) {
+        System.out.println("Updating generator with id " + generatorRequest.getId());
+        Generator result = generatorService.updateGenerator(generatorRequest);
+        if(result == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        System.out.println("Generator updated");
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     @CrossOrigin
-    @DeleteMapping("/generators/delete/{id}")
+    @DeleteMapping("/generators/remove/{id}")
     public ResponseEntity<Long> deleteGenerator(@PathVariable Long id) {
         System.out.println("Deleting generator with id " + id);
         Boolean result = generatorService.deleteGenerator(id);

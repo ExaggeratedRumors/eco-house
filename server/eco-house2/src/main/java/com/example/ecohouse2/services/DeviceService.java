@@ -33,8 +33,8 @@ public class DeviceService {
     }
 
     public Device addDevice(DeviceRequest deviceRequest) {
-        Room room = roomRepo.findById(deviceRequest.getRoomId()).orElseThrow(
-                () -> new EntityNotFoundException("room not found with id " + deviceRequest.getRoomId()));
+        Room room = roomRepo.findById(deviceRequest.getId()).orElseThrow(
+                () -> new EntityNotFoundException("room not found with id " + deviceRequest.getId()));
         Device newDevice = deviceRequest.toDevice();
         newDevice.setRoom(room);
         System.out.println("Attempt to add device with room: " + room.getId() + " " + room.getName());
@@ -55,7 +55,15 @@ public class DeviceService {
 
     public boolean doesDeviceExist(DeviceRequest deviceRequest) {
         String name = deviceRequest.getName();
-        Long roomId = deviceRequest.getRoomId();
+        Long roomId = deviceRequest.getId();
         return deviceRepo.doesDeviceExist(name, roomId);
+    }
+
+    public Device updateDevice(DeviceRequest deviceRequest) {
+        Device device = getDevice(deviceRequest.getId());
+        if(device == null) return null;
+        device.setName(deviceRequest.getName());
+        device.setPowerConsumptionPerHour(deviceRequest.getPowerConsumption());
+        return deviceRepo.save(device);
     }
 }

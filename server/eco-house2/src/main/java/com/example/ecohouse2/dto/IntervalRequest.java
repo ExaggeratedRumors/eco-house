@@ -12,7 +12,7 @@ import java.time.LocalTime;
 public class IntervalRequest implements Serializable {
     private LocalTime timeStart;
     private LocalTime timeEnd;
-    private Long deviceId;
+    private Long id;
 
     public Interval toInterval(){
         Interval interval = new Interval();

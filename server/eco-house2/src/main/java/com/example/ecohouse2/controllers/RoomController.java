@@ -50,9 +50,20 @@ public class RoomController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @CrossOrigin
+    @PatchMapping("/rooms/update")
+    public ResponseEntity<Room> updateRoom(@RequestBody RoomRequest roomRequest) {
+        System.out.println("Updating room with id " + roomRequest.getId());
+        Room result = roomService.updateRoom(roomRequest);
+        if(result == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        System.out.println("Room updated");
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 
     @CrossOrigin
-    @DeleteMapping("/rooms/delete/{id}")
+    @DeleteMapping("/rooms/remove/{id}")
     public ResponseEntity<Long> deleteRoom(@PathVariable Long id) {
         System.out.println("Deleting room with id " + id);
         Boolean result = roomService.deleteRoom(id);

@@ -88,7 +88,18 @@ public class HouseController {
     }
 
     @CrossOrigin
-    @DeleteMapping("/houses/delete/{id}")
+    @PatchMapping("/houses/update")
+    public ResponseEntity<House> updateHouse(@RequestBody HouseRequest houseRequest) {
+        System.out.println("Updating house with id " + houseRequest.getId());
+        House result = houseService.updateHouse(houseRequest);
+        if(result == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        System.out.println("House updated");
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @CrossOrigin
+    @DeleteMapping("/houses/remove/{id}")
     public ResponseEntity<Long> deleteHouse(@PathVariable Long id) {
         System.out.println("Deleting house with id " + id);
         Boolean result = houseService.deleteHouse(id);
