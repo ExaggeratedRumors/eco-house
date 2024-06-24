@@ -6,7 +6,6 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class OwnerService {
         return userRepo.findAll();
     }
 
-    public Boolean deleteUser(Long index) {
+    public Boolean deleteOwner(Long index) {
         if(getOwner(index) == null) return false;
         userRepo.deleteById(index);
         return true;

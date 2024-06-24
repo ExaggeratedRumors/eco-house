@@ -124,24 +124,33 @@ public class House implements Serializable {
 
                     if (isDay(interval.getTimeStart()) && isDay(interval.getTimeEnd())) { // same tariff
                         //TODO fix if interval is longer than day
-                        intervals.add(Pair.of(interval.getTimeStart(), device.getPowerConsumptionPerHour() - energyProduced));
-                        intervals.add(Pair.of(interval.getTimeEnd(), -device.getPowerConsumptionPerHour() - energyProduced));
+                        intervals.add(Pair.of(interval.getTimeStart(), device.getPowerConsumptionPerHour()));
+                        intervals.add(Pair.of(interval.getTimeEnd(), -device.getPowerConsumptionPerHour()));
                     }
                     else if (isDay(interval.getTimeStart()) && !isDay(interval.getTimeEnd())) { //start is day, end is night
-                        intervals.add(Pair.of(interval.getTimeStart(), device.getPowerConsumptionPerHour() - energyProduced));
-                        intervals.add(Pair.of(dayEnd, -device.getPowerConsumptionPerHour() - energyProduced));
-                        intervals.add(Pair.of(dayEnd, device.getPowerConsumptionPerHour() - energyProduced));
-                        intervals.add(Pair.of(interval.getTimeEnd(), -device.getPowerConsumptionPerHour() - energyProduced));
+                        intervals.add(Pair.of(interval.getTimeStart(), device.getPowerConsumptionPerHour()));
+                        intervals.add(Pair.of(dayEnd, -device.getPowerConsumptionPerHour()));
+                        intervals.add(Pair.of(dayEnd, device.getPowerConsumptionPerHour()));
+                        intervals.add(Pair.of(interval.getTimeEnd(), -device.getPowerConsumptionPerHour()));
                     }
                     else if (!isDay(interval.getTimeStart()) && isDay(interval.getTimeEnd())) { //start is night, end is day
-                        intervals.add(Pair.of(interval.getTimeStart(), device.getPowerConsumptionPerHour() - energyProduced));
-                        intervals.add(Pair.of(dayStart, -device.getPowerConsumptionPerHour() - energyProduced));
-                        intervals.add(Pair.of(dayStart, device.getPowerConsumptionPerHour() - energyProduced));
-                        intervals.add(Pair.of(interval.getTimeEnd(), -device.getPowerConsumptionPerHour() - energyProduced));
+                        intervals.add(Pair.of(interval.getTimeStart(), device.getPowerConsumptionPerHour()));
+                        intervals.add(Pair.of(dayStart, -device.getPowerConsumptionPerHour()));
+                        intervals.add(Pair.of(dayStart, device.getPowerConsumptionPerHour()));
+                        intervals.add(Pair.of(interval.getTimeEnd(), -device.getPowerConsumptionPerHour()));
                     }
                 }
             }
         }
+        if (!intervals.isEmpty() ) {
+            if (intervals.get(0).getFirst().isAfter(LocalTime.parse("00:00"))){
+                intervals.add(0, Pair.of(LocalTime.parse("00:00"), -energyProduced));
+            }
+            if (intervals.get(intervals.size() - 1).getFirst().isBefore(LocalTime.parse("23:59"))) {
+                intervals.add(Pair.of(LocalTime.parse("23:59"), energyProduced));
+            }
+        }
+
         System.out.println(intervals);
         return intervals;
     }

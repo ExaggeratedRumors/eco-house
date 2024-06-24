@@ -34,6 +34,12 @@ public class IntervalService {
         return intervalRepo.save(newInterval);
     }
 
+    public Boolean deleteInterval(Long id) {
+        if(getInterval(id) == null) return false;
+        intervalRepo.deleteById(id);
+        return true;
+    }
+
 
     public Interval getInterval(Long index) {
         return intervalRepo.findById(index).orElseThrow(

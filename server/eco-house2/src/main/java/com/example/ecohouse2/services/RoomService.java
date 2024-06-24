@@ -29,4 +29,19 @@ public class RoomService {
         System.out.println("Attempt to add room to house: " + house.getHouse_id() + " " + house.getName());
         return roomRepo.save(newRoom);
     }
+
+
+    public Boolean deleteRoom(Long id) {
+        if(getRoom(id) == null) return false;
+        roomRepo.deleteById(id);
+        return true;
+    }
+
+
+    public Room getRoom(Long houseID) {
+        return roomRepo.findById(houseID).orElseThrow(
+                () -> new EntityNotFoundException("Room not found with id " + houseID)
+        );
+    }
+
 }
