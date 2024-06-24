@@ -43,6 +43,10 @@ public class DeviceController {
     @PostMapping("/devices/add")
     public ResponseEntity<Device> addDevice(@RequestBody DeviceRequest deviceRequest) {
         System.out.println("Adding device \"" + deviceRequest.getName() +"\"");
+        if(deviceService.doesDeviceExist(deviceRequest))
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+
+        System.out.println("Adding device \"" + deviceRequest.getName() +"\"");
         Device result = deviceService.addDevice(deviceRequest);
         if(result == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

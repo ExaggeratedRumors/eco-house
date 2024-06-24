@@ -37,7 +37,7 @@ Content-Type: application/json
 
 {
   "houseId": 1,
-  "name": "Pokój 1"
+  "name": "abc"
 }
 ### remove room
 DELETE http://localhost:8082/rooms/remove/1
@@ -75,8 +75,8 @@ Content-Type: application/json
 
 {
   "deviceId": 1,
-  "timeStart": "09:00",
-  "timeEnd": "11:00"
+  "timeStart": "05:00",
+  "timeEnd": "19:00"
 }
 ### remove interval
 DELETE http://localhost:8082/intervals/remove/1

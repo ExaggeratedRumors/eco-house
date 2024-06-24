@@ -34,6 +34,9 @@ public class IntervalController {
     @PostMapping("/intervals/add")
     public ResponseEntity<Interval> addInterval(@RequestBody IntervalRequest intervalRequest) {
         System.out.println("Adding interval (start at \"" + intervalRequest.getTimeStart() +")\"");
+        if (intervalService.doesIntervalOverlap(intervalRequest) || intervalService.isIntervalInvalid(intervalRequest))
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+
         Interval result = intervalService.addInterval(intervalRequest);
         if(result == null)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

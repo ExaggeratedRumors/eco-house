@@ -76,6 +76,9 @@ public class HouseController {
     @PostMapping("/houses/add")
     public ResponseEntity<House> addHouse(@RequestBody HouseRequest houseRequest) {
         System.out.println("Adding house \"" + houseRequest.getName() +"\"");
+        if (houseService.doesHouseExist(houseRequest))
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+
         House result = houseService.addHouse(houseRequest);
         if(result == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

@@ -40,6 +40,8 @@ public class RoomController {
     @PostMapping("/rooms/add")
     public ResponseEntity<Room> addRoom(@RequestBody RoomRequest roomRequest) {
         System.out.println("Adding room \"" + roomRequest.getName() +"\"");
+        if (roomService.doesRoomExist(roomRequest))
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         Room result = roomService.addRoom(roomRequest);
         if(result == null)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

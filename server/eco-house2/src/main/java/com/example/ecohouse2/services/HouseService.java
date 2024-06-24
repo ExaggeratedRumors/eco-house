@@ -53,4 +53,10 @@ public class HouseService {
                 () -> new EntityNotFoundException("House not found with id " + houseID)
         );
     }
+
+    public boolean doesHouseExist(HouseRequest houseRequest) {
+        String name = houseRequest.getName();
+        int ownerId = houseRequest.getOwnerId();
+        return houseRepo.doesHouseExist(name, (long)ownerId);
+    }
 }

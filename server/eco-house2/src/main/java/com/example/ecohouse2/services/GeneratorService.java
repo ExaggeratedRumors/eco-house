@@ -44,6 +44,12 @@ public class GeneratorService {
         return generatorRepo.save(newGenerator);
     }
 
+    public boolean doesGeneratorExist(GeneratorRequest generatorRequest) {
+        String name = generatorRequest.getName();
+        Long houseID = generatorRequest.getHouseId();
+        return generatorRepo.doesGeneratorExist(name, houseID);
+    }
+
     public Boolean deleteGenerator(Long index) {
         if(getGenerator(index) == null) return false;
         generatorRepo.deleteById(index);

@@ -46,4 +46,18 @@ public class IntervalService {
                 () -> new EntityNotFoundException("Interval not found with id " + index)
         );
     }
+
+    public boolean doesIntervalOverlap(IntervalRequest intervalRequest) {
+        List<Interval> intervals = intervalRepo.getDeviceIntervals(intervalRequest.getDeviceId());
+        for(Interval interval : intervals) {
+            if(intervalRequest.getTimeStart().isBefore(interval.getTimeEnd()) && intervalRequest.getTimeEnd().isAfter(interval.getTimeStart())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isIntervalInvalid(IntervalRequest intervalRequest) {
+        return intervalRequest.getTimeStart().isAfter(intervalRequest.getTimeEnd());
+    }
 }

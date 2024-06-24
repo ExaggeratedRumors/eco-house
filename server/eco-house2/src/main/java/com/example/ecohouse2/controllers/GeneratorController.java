@@ -43,6 +43,9 @@ public class GeneratorController {
     @PostMapping("/generators/add")
     public ResponseEntity<Generator> addGenerator(@RequestBody GeneratorRequest generatorRequest) {
         System.out.println("Adding generator \"" + generatorRequest.getName() +"\"");
+        if(generatorService.doesGeneratorExist(generatorRequest))
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+
         Generator result = generatorService.addGenerator(generatorRequest);
         if(result == null)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

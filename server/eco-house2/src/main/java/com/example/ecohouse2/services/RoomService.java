@@ -44,4 +44,10 @@ public class RoomService {
         );
     }
 
+
+    public boolean doesRoomExist(RoomRequest room) {
+        String name = room.getName();
+        Long houseID = room.getHouseId();
+        return roomRepo.doesRoomExist(name, houseID);
+    }
 }

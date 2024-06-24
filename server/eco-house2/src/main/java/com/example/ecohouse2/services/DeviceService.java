@@ -52,4 +52,10 @@ public class DeviceService {
                 () -> new EntityNotFoundException("Device not found with id " + index)
         );
     }
+
+    public boolean doesDeviceExist(DeviceRequest deviceRequest) {
+        String name = deviceRequest.getName();
+        Long roomId = deviceRequest.getRoomId();
+        return deviceRepo.doesDeviceExist(name, roomId);
+    }
 }
