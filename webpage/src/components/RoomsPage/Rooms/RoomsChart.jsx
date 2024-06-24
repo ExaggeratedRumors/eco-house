@@ -33,7 +33,7 @@ const RoomChart = ({ devicesData, roomName }) => {
                     delay: 150
                 },
                 dynamicAnimation: {
-                    enabled: true,
+                    enabled: false,
                     speed: 350
                 }
             }

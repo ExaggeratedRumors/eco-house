@@ -158,16 +158,30 @@ const Rooms = () => {
         }
     };
 
-    const addItem = async (collection, body, updateFunction) => {
+    const sendItem = async (collection, body, updateFunction, mode) => {
         try {
-            const response = await fetch(`http://localhost:8082/${collection}/add`, {
-                method: 'POST',
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(body),
-            });
+            let response
+            if(mode === 1) {
+                response = await fetch(`http://localhost:8082/${collection}/add`, {
+                    method: 'POST',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(body),
+                });
+            } else if(mode === 2) {
+                response = await fetch(`http://localhost:8082/${collection}/update`, {
+                    method: 'PATCH',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(body),
+                });
+            } else return
+
+
             const newItem = await response.json();
             updateFunction(newItem);
             await fetchData()
@@ -216,7 +230,7 @@ const Rooms = () => {
     const updateHouseAfterDelete = () => {
         setOwnerData(prevData => ({
             ...prevData,
-            houses: prevData.houses.filter(house => house.house_id !== selectedHouse.house_id),
+            houses: prevData.houses.filter(house => house.house_id !== selectedHouse.id),
         }));
         setSelectedHouse(null);
     };
@@ -254,7 +268,7 @@ const Rooms = () => {
     };
 
     const updateHouseAfterAdd = (newHouse) => {
-        const c = ownerData.houses.find((it) => it.id === newHouse.id)
+        const c = ownerData.houses.find((it) => it.house_id === newHouse.house_id)
         setOwnerData(prevData => ({
             ...prevData,
             houses: [...prevData.houses, newHouse],
@@ -381,14 +395,14 @@ const Rooms = () => {
                                                onChange={(e) => setHouseNightTariff(e.target.value)}
                                                placeholder="House night tariff"/>
                                         <button class="room-button"
-                                            onClick={() => addItem('houses',
+                                            onClick={() => sendItem('houses',
                                                 {
-                                                    ownerId: ownerData.owner_id,
+                                                    id: ownerData.owner_id,
                                                     name: houseName,
                                                     address: houseAddress,
                                                     daytimeTariff: houseDayTariff,
                                                     nightTariff: houseNightTariff
-                                                }, updateHouseAfterAdd)}>Submit
+                                                }, updateHouseAfterAdd, showHouseForm)}>Submit
                                         </button>
                                     </div>
                                 )}
@@ -441,10 +455,10 @@ const Rooms = () => {
                                                 <input type="text" value={roomName}
                                                        onChange={(e) => setRoomName(e.target.value)}
                                                        placeholder="Room Name"/>
-                                                <button class="room-button" onClick={() => addItem('rooms', {
+                                                <button class="room-button" onClick={() => sendItem('rooms', {
                                                     name: roomName,
-                                                    houseId: selectedHouse.house_id
-                                                }, updateRoomAfterAdd)}>Submit
+                                                    id: selectedHouse.house_id
+                                                }, updateRoomAfterAdd, showRoomForm)}>Submit
                                                 </button>
                                             </div>
                                         )}
@@ -512,13 +526,13 @@ const Rooms = () => {
                                                        onChange={(e) => setGeneratorWattage(e.target.value)}
                                                        placeholder="Generator wattage"/>
 
-                                                <button class="room-button" onClick={() => addItem('generators', {
+                                                <button class="room-button" onClick={() => sendItem('generators', {
                                                     name: generatorName,
-                                                    houseId: selectedHouse.house_id,
+                                                    id: selectedHouse.id,
                                                     wattage: generatorWattage,
                                                     effectiveness: generatorEffectiveness,
                                                     batteryCapacity: generatorBatteryCapacity
-                                                }, updateGeneratorAfterAdd)}>Submit
+                                                }, updateGeneratorAfterAdd, showGeneratorForm)}>Submit
                                                 </button>
                                             </div>
                                         )}
@@ -585,11 +599,11 @@ const Rooms = () => {
                                                        value={devicePowerConsumption === 0 ? '' : devicePowerConsumption}
                                                        onChange={(e) => setDevicePowerConsumption(e.target.value)}
                                                        placeholder="Power consumption"/>
-                                                <button class="room-button" onClick={() => addItem('devices', {
+                                                <button class="room-button" onClick={() => sendItem('devices', {
                                                     name: deviceName,
-                                                    roomId: selectedRoom.id,
+                                                    id: selectedRoom.id,
                                                     powerConsumption: devicePowerConsumption
-                                                }, updateDeviceAfterAdd)}>Submit
+                                                }, updateDeviceAfterAdd, showDeviceForm)}>Submit
                                                 </button>
                                             </div>
                                         )}
@@ -647,11 +661,11 @@ const Rooms = () => {
                                                     <button class="room-button"
                                                         onClick={() => {
                                                             if(validateInterval()) {
-                                                                addItem('intervals', {
+                                                                sendItem('intervals', {
                                                                     timeStart: formatTime(intervalStartTime),
                                                                     timeEnd: formatTime(intervalEndTime),
-                                                                    deviceId: selectedDevice.id
-                                                                }, updateIntervalAfterAdd)
+                                                                    id: selectedDevice.id
+                                                                }, updateIntervalAfterAdd, showIntervalForm)
                                                             } else {
                                                                 alert('Invalid interval');
                                                             }

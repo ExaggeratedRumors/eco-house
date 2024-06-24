@@ -140,10 +140,15 @@ const LineChart = ({ houseId, houseName }) => {
         <section className='power section-p bg-md-black text-center'>
             <div className='line-chart grid'>
                 <h2>House: {houseName}</h2>
-                <lu>
-                    {dailyEnergyProduced && (<li>Daily energy produced: {dailyEnergyProduced.toFixed(6)} kWh</li>)}
-                    {dailyCost && (<li>Daily cost: {dailyCost.toFixed(6)} PLN</li>)}
-                </lu>
+                {dailyEnergyProduced > 0 || dailyCost > 0 ? (
+                    <div className='container-center text-white'>
+                        <lu className='container-content'>
+                            {dailyEnergyProduced && (
+                                <li>Daily energy produced: {dailyEnergyProduced.toFixed(6)} kWh</li>)}
+                            {dailyCost && (<li>Daily cost: {dailyCost.toFixed(6)} PLN</li>)}
+                        </lu>
+                    </div>
+                    ) : ('')}
                 <canvas className='line-chart-content' ref={powerChartRef}/>
                 <canvas className='line-chart-content' ref={costChartRef}/>
             </div>

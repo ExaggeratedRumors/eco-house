@@ -4,8 +4,9 @@
 }
 
 .rooms-panel {
+    padding: 20px;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 2fr;
 }
 
 .rooms-title {
@@ -16,6 +17,17 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     padding: 20px;
+}
+
+.container-center {
+    text-align: center;
+    border-radius: 25px;
+    border: 2px solid #ccc;
+}
+
+.container-left {
+    display: inline-block;
+    text-align: left;
 }
 
 select {

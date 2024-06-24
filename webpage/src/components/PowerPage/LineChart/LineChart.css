@@ -37,3 +37,14 @@
 .container {
     transition: transform 0.6s ease-in-out;
 }
+
+.container-center {
+    text-align: center;
+    border-radius: 25px;
+    border: 2px solid #ccc;
+}
+
+.container-content {
+    display: inline-block;
+    text-align: left;
+}
