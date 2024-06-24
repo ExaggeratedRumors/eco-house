@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import "./Rooms.css";
 import RoomsChart from "./RoomsChart";
 import axios from "axios";
@@ -28,7 +27,7 @@ const Rooms = () => {
 
     /** Interval **/
     const [intervalStartTime, setIntervalStartTime] = useState('');
-    const [intervalEndTime, setIntervalEndtime] = useState('');
+    const [intervalEndTime, setIntervalEndTime] = useState('');
 
     /** Selections **/
     const [selectedHouse, setSelectedHouse] = useState(null);
@@ -38,11 +37,11 @@ const Rooms = () => {
     const [selectedInterval, setSelectedInterval] = useState(null);
 
     /** Flags **/
-    const [showAddHouseForm, setShowAddHouseForm] = useState(false);
-    const [showAddRoomForm, setShowAddRoomForm] = useState(false);
-    const [showAddGeneratorForm, setShowAddGeneratorForm] = useState(false);
-    const [showAddDeviceForm, setShowAddDeviceForm] = useState(false);
-    const [showAddIntervalForm, setShowAddIntervalForm] = useState(false);
+    const [showHouseForm, setShowHouseForm] = useState(0);
+    const [showRoomForm, setShowRoomForm] = useState(0);
+    const [showGeneratorForm, setShowGeneratorForm] = useState(0);
+    const [showDeviceForm, setShowDeviceForm] = useState(0);
+    const [showIntervalForm, setShowIntervalForm] = useState(0);
 
     /** Token **/
     let token = localStorage.getItem('token');
@@ -58,7 +57,6 @@ const Rooms = () => {
             console.error('No token found');
             return;
         }
-        console.log("Token:" + token)
         try {
             const id = localStorage.getItem('id');
             const response = await axios.get('http://localhost:8082/owners/' + id, {
@@ -66,7 +64,51 @@ const Rooms = () => {
                     'Authorization': `Bearer ${token}`,
                 },
             });
-            setOwnerData(response.data);
+            const newOwnerData = response.data;
+            setOwnerData(newOwnerData);
+
+            if (selectedHouse) {
+                const updatedHouse = newOwnerData.houses.find((house) => house.house_id === selectedHouse.house_id);
+                setSelectedHouse(updatedHouse || null);
+
+                if (updatedHouse && selectedRoom) {
+                    const updatedRoom = updatedHouse.rooms.find((room) => room.id === selectedRoom.id);
+                    setSelectedRoom(updatedRoom || null);
+
+                    if (updatedRoom && selectedDevice) {
+                        const updatedDevice = updatedRoom.devices.find((device) => device.id === selectedDevice.id);
+                        setSelectedDevice(updatedDevice || null);
+
+                        if (updatedDevice && selectedInterval) {
+                            const updatedInterval = updatedDevice.intervals.find((interval) => interval.id === selectedInterval.id);
+                            setSelectedInterval(updatedInterval || null);
+                        } else {
+                            setSelectedInterval(null);
+                        }
+                    } else {
+                        setSelectedDevice(null);
+                        setSelectedInterval(null);
+                    }
+                } else {
+                    setSelectedRoom(null);
+                    setSelectedDevice(null);
+                    setSelectedInterval(null);
+                }
+
+                if (updatedHouse && selectedGenerator) {
+                    const updatedGenerator = updatedHouse.generators.find((generator) => generator.id === selectedGenerator.id);
+                    setSelectedGenerator(updatedGenerator || null);
+                } else {
+                    setSelectedGenerator(null);
+                }
+            } else {
+                setSelectedHouse(null);
+                setSelectedRoom(null);
+                setSelectedDevice(null);
+                setSelectedGenerator(null);
+                setSelectedInterval(null);
+            }
+
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -87,23 +129,38 @@ const Rooms = () => {
         return intervalsCount;
     }
 
+    function validateInterval() {
+        const startValidate = /^([01]\d|2[0-3]):([0-5]\d)$/.test(intervalStartTime);
+        const endValidate = /^([01]\d|2[0-3]):([0-5]\d)$/.test(intervalEndTime);
+        const startMinutes = parseInt(intervalStartTime.split(':')[1]) +
+            60 * parseInt(intervalStartTime.split(':')[0]);
+        const endMinutes = parseInt(intervalEndTime.split(':')[1]) +
+            60 * parseInt(intervalEndTime.split(':')[0]);
+
+        console.log(startValidate);
+        console.log(endValidate);
+        console.log(startMinutes < endMinutes);
+        return startValidate && endValidate && (startMinutes < endMinutes);
+    }
+
     /** Manipulate items **/
-    const deleteItem = async (endpoint, id, updateFunction) => {
+    const deleteItem = async (collection, id, updateFunction) => {
         try {
-            const response = await axios.delete(`${endpoint}/${id}`, {
+            await axios.delete(`http://localhost:8082/${collection}/delete/${id}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                 }
             });
             updateFunction();
+            await fetchData()
         } catch (error) {
             alert(`Error deleting item: ${error}`);
         }
     };
 
-    const addItem = async (endpoint, body, updateFunction) => {
+    const addItem = async (collection, body, updateFunction) => {
         try {
-            const response = await fetch(endpoint, {
+            const response = await fetch(`http://localhost:8082/${collection}/add`, {
                 method: 'POST',
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -111,12 +168,9 @@ const Rooms = () => {
                 },
                 body: JSON.stringify(body),
             });
-            if (!response.ok) {
-                throw new Error(`Error adding item: ${response.statusText}`);
-            }
             const newItem = await response.json();
             updateFunction(newItem);
-            //alert('Item added successfully: ' + newItem);
+            await fetchData()
         } catch (error) {
             alert(`Error adding item: ${error}`);
         }
@@ -200,6 +254,7 @@ const Rooms = () => {
     };
 
     const updateHouseAfterAdd = (newHouse) => {
+        const c = ownerData.houses.find((it) => it.id === newHouse.id)
         setOwnerData(prevData => ({
             ...prevData,
             houses: [...prevData.houses, newHouse],
@@ -247,9 +302,10 @@ const Rooms = () => {
         }));
     };
 
-    const toggleForm = (setShowForm, showForm) => {
-        setShowForm(!showForm);
+    const toggleForm = (setShowForm, showForm, value) => {
+        setShowForm(value);
     };
+
 
     /** Start UI **/
 
@@ -262,6 +318,9 @@ const Rooms = () => {
             <h1 className='rooms-title'>Device Usage Schedule</h1>
             <div className="room-container">
                 <div className="container">
+
+                {/* Houses */}
+
                     <div className="select-box">
                         <hr className="room-hr"></hr>
                         <h2>Houses</h2>
@@ -275,18 +334,39 @@ const Rooms = () => {
                                         </option>
                                     ))}
                                 </select>
+                                {selectedHouse && (
+                                    <div className="container-center text-white border">
+                                        <lu className="container-left">
+                                            <li>Address: {selectedHouse.address}</li>
+                                            <li>Daytime Tariff: {selectedHouse.daytimeTariff}</li>
+                                            <li>Night Tariff: {selectedHouse.nightTariff}</li>
+                                        </lu>
+                                    </div>
+                                )}
                             </div>
-                            <div className="rooms-right-panel">
-                                {/* Remove house */}
-                                {selectedHouse && <button class="room-button"
-                                    onClick={() => deleteItem('http://localhost:8082/houses/remove', selectedHouse.house_id, updateHouseAfterDelete)}>Delete
-                                    House</button>}
 
-                                {/* Add house */}
-                                <button class="room-button" onClick={() => toggleForm(setShowAddHouseForm, showAddHouseForm)}>
-                                    {showAddHouseForm ? 'Hide' : 'Add House'}
-                                </button>
-                                {showAddHouseForm && (
+                            <div className="rooms-right-panel">
+                                {selectedHouse && showHouseForm === 0 && (
+                                    <button class="room-button" onClick={() => deleteItem('houses', selectedHouse.house_id, updateHouseAfterDelete)}>
+                                        Delete House
+                                    </button>
+                                )}
+                                {showHouseForm === 0 && (
+                                    <button className="room-button" onClick={() => toggleForm(setShowHouseForm, showHouseForm, 1)}>
+                                        Add House
+                                    </button>
+                                )}
+                                {selectedHouse && showHouseForm === 0 && (
+                                    <button className="room-button" onClick={() => toggleForm(setShowHouseForm, showHouseForm, 2)}>
+                                        Edit House
+                                    </button>
+                                )}
+                                {showHouseForm !== 0 && (
+                                    <button className="room-button" onClick={() => toggleForm(setShowHouseForm, showHouseForm, 0)}>
+                                        Hide
+                                    </button>
+                                )}
+                                {showHouseForm > 0 && (
                                     <div className="add-form">
                                         <input type="text" value={houseName}
                                                onChange={(e) => setHouseName(e.target.value)}
@@ -301,7 +381,7 @@ const Rooms = () => {
                                                onChange={(e) => setHouseNightTariff(e.target.value)}
                                                placeholder="House night tariff"/>
                                         <button class="room-button"
-                                            onClick={() => addItem('http://localhost:8082/houses/add',
+                                            onClick={() => addItem('houses',
                                                 {
                                                     ownerId: ownerData.owner_id,
                                                     name: houseName,
@@ -318,6 +398,7 @@ const Rooms = () => {
 
 
                     {/* Rooms and generators */}
+
                     {selectedHouse && (
                         <>
                             <div className="select-box">
@@ -335,21 +416,32 @@ const Rooms = () => {
                                         </select>
                                     </div>
                                     <div className="rooms-right-panel">
-                                        {/* Remove room */}
-                                        {selectedRoom && <button class="room-button"
-                                            onClick={() => deleteItem('http://localhost:8082/rooms/delete', selectedRoom.id, updateRoomAfterDelete)}>Delete
-                                            Room</button>}
-
-                                        {/* Add room */}
-                                        <button class="room-button" onClick={() => toggleForm(setShowAddRoomForm, showAddRoomForm)}>
-                                            {showAddRoomForm ? 'Hide' : 'Add Room'}
-                                        </button>
-                                        {showAddRoomForm && (
+                                        {selectedRoom && showRoomForm === 0 && (
+                                            <button class="room-button" onClick={() => deleteItem('rooms', selectedRoom.id, updateRoomAfterDelete)}>
+                                                Delete Room
+                                            </button>
+                                        )}
+                                        {showRoomForm === 0 && (
+                                            <button className="room-button" onClick={() => toggleForm(setShowRoomForm, showRoomForm, 1)}>
+                                                Add Room
+                                            </button>
+                                        )}
+                                        {selectedRoom && showRoomForm === 0 && (
+                                            <button className="room-button" onClick={() => toggleForm(setShowRoomForm, showRoomForm, 2)}>
+                                                Edit Room
+                                            </button>
+                                        )}
+                                        {showRoomForm !== 0 && (
+                                            <button className="room-button" onClick={() => toggleForm(setShowRoomForm, showRoomForm, 0)}>
+                                                Hide
+                                            </button>
+                                        )}
+                                        {showRoomForm > 0 && (
                                             <div className="add-form">
                                                 <input type="text" value={roomName}
                                                        onChange={(e) => setRoomName(e.target.value)}
                                                        placeholder="Room Name"/>
-                                                <button class="room-button" onClick={() => addItem('http://localhost:8082/rooms/add', {
+                                                <button class="room-button" onClick={() => addItem('rooms', {
                                                     name: roomName,
                                                     houseId: selectedHouse.house_id
                                                 }, updateRoomAfterAdd)}>Submit
@@ -374,19 +466,38 @@ const Rooms = () => {
                                                 </option>
                                             ))}
                                         </select>
+                                        {selectedGenerator && (
+                                            <div className="container-center text-white border">
+                                                <lu className="container-left">
+                                                    <li>Effectiveness: {selectedGenerator.effectiveness}</li>
+                                                    <li>Battery Capacity: {selectedGenerator.batteryCapacity}</li>
+                                                    <li>Wattage: {selectedGenerator.wattage}</li>
+                                                </lu>
+                                            </div>
+                                        )}
                                     </div>
                                     <div className="rooms-right-panel">
-                                        {/* Remove generator */}
-                                        {selectedGenerator && <button class="room-button"
-                                            onClick={() => deleteItem('http://localhost:8082/generators/delete', selectedGenerator.id, updateGeneratorAfterDelete)}>Delete
-                                            Generator</button>}
-
-                                        {/* Add generator */}
-                                        <button class="room-button"
-                                            onClick={() => toggleForm(setShowAddGeneratorForm, showAddGeneratorForm)}>
-                                            {showAddGeneratorForm ? 'Hide' : 'Add Generator'}
-                                        </button>
-                                        {showAddGeneratorForm && (
+                                        {selectedGenerator && showGeneratorForm === 0 && (
+                                            <button class="room-button" onClick={() => deleteItem('generators', selectedGenerator.id, updateGeneratorAfterDelete)}>
+                                                Delete Generator
+                                            </button>
+                                        )}
+                                        {showGeneratorForm === 0 && (
+                                            <button className="room-button" onClick={() => toggleForm(setShowGeneratorForm, showGeneratorForm, 1)}>
+                                                Add Generator
+                                            </button>
+                                        )}
+                                        {selectedGenerator && showGeneratorForm === 0 && (
+                                            <button className="room-button" onClick={() => toggleForm(setShowGeneratorForm, showGeneratorForm, 2)}>
+                                                Edit Generator
+                                            </button>
+                                        )}
+                                        {showGeneratorForm !== 0 && (
+                                            <button className="room-button" onClick={() => toggleForm(setShowGeneratorForm, showGeneratorForm, 0)}>
+                                                Hide
+                                            </button>
+                                        )}
+                                        {showGeneratorForm > 0 && (
                                             <div className="add-form">
                                                 <input type="text" value={generatorName}
                                                        onChange={(e) => setGeneratorName(e.target.value)}
@@ -401,7 +512,7 @@ const Rooms = () => {
                                                        onChange={(e) => setGeneratorWattage(e.target.value)}
                                                        placeholder="Generator wattage"/>
 
-                                                <button class="room-button" onClick={() => addItem('http://localhost:8082/generators/add', {
+                                                <button class="room-button" onClick={() => addItem('generators', {
                                                     name: generatorName,
                                                     houseId: selectedHouse.house_id,
                                                     wattage: generatorWattage,
@@ -418,7 +529,9 @@ const Rooms = () => {
                     )}
 
 
+
                     {/* Devices */}
+
                     {selectedRoom && (
                         <>
                             <div className="select-box">
@@ -434,18 +547,36 @@ const Rooms = () => {
                                                 </option>
                                             ))}
                                         </select>
+                                        {selectedDevice && (
+                                            <div className="container-center text-white border">
+                                                <lu className="container-left">
+                                                    <li>Power consumption [kWh]: {selectedDevice.powerConsumptionPerHour}</li>
+                                                </lu>
+                                            </div>
+                                        )}
                                     </div>
                                     <div className="rooms-right-panel">
-                                        {/* Remove device */}
-                                        {selectedDevice && <button class="room-button"
-                                            onClick={() => deleteItem('http://localhost:8082/devices/delete', selectedDevice.id, updateDeviceAfterDelete)}>Delete
-                                            Device</button>}
-
-                                        {/* Add device */}
-                                        <button class="room-button" onClick={() => toggleForm(setShowAddDeviceForm, showAddDeviceForm)}>
-                                            {showAddDeviceForm ? 'Hide' : 'Add Device'}
-                                        </button>
-                                        {showAddDeviceForm && (
+                                        {selectedDevice && showDeviceForm === 0 && (
+                                            <button class="room-button" onClick={() => deleteItem('devices', selectedDevice.id, updateDeviceAfterDelete)}>
+                                                Delete Device
+                                            </button>
+                                        )}
+                                        {showDeviceForm === 0 && (
+                                            <button className="room-button" onClick={() => toggleForm(setShowDeviceForm, showDeviceForm, 1)}>
+                                                Add Device
+                                            </button>
+                                        )}
+                                        {selectedDevice && showDeviceForm === 0 && (
+                                            <button className="room-button" onClick={() => toggleForm(setShowDeviceForm, showDeviceForm, 2)}>
+                                                Edit Device
+                                            </button>
+                                        )}
+                                        {showDeviceForm !== 0 && (
+                                            <button className="room-button" onClick={() => toggleForm(setShowDeviceForm, showDeviceForm, 0)}>
+                                                Hide
+                                            </button>
+                                        )}
+                                        {showDeviceForm > 0 && (
                                             <div className="add-form">
                                                 <input type="text" value={deviceName}
                                                        onChange={(e) => setDeviceName(e.target.value)}
@@ -454,7 +585,7 @@ const Rooms = () => {
                                                        value={devicePowerConsumption === 0 ? '' : devicePowerConsumption}
                                                        onChange={(e) => setDevicePowerConsumption(e.target.value)}
                                                        placeholder="Power consumption"/>
-                                                <button class="room-button" onClick={() => addItem('http://localhost:8082/devices/add', {
+                                                <button class="room-button" onClick={() => addItem('devices', {
                                                     name: deviceName,
                                                     roomId: selectedRoom.id,
                                                     powerConsumption: devicePowerConsumption
@@ -468,13 +599,13 @@ const Rooms = () => {
 
 
                             {/* Intervals */}
+
                             {selectedDevice && (
                                 <div className="select-box">
                                     <hr class="room-hr"></hr>
                                     <h2>Working intervals</h2>
                                     <div className="rooms-panel">
                                         <div className="rooms-left-panel">
-
                                             <select id="intervals" onChange={handleIntervalChange}>
                                                 <option value="">Select an interval</option>
                                                 {selectedDevice.intervals.map((interval) => (
@@ -485,32 +616,47 @@ const Rooms = () => {
                                             </select>
                                         </div>
                                         <div className="rooms-right-panel">
-                                            {/* Remove interval */}
-
-                                            {selectedInterval && <button class="room-button"
-                                                onClick={() => deleteItem('http://localhost:8082/intervals', selectedInterval.id, updateIntervalAfterDelete)}>Delete
-                                                Interval</button>}
-
-                                            {/* Add interval */}
-
-                                            <button class="room-button"
-                                                onClick={() => toggleForm(setShowAddIntervalForm, showAddIntervalForm)}>
-                                                {showAddIntervalForm ? 'Hide' : 'Add Interval'}
-                                            </button>
-                                            {showAddIntervalForm && (
+                                            {selectedInterval && showIntervalForm === 0 && (
+                                                <button class="room-button" onClick={() => deleteItem('intervals', selectedInterval.id, updateIntervalAfterDelete)}>
+                                                    Delete Interval
+                                                </button>
+                                            )}
+                                            {showIntervalForm === 0 && (
+                                                <button className="room-button" onClick={() => toggleForm(setShowIntervalForm, showIntervalForm, 1)}>
+                                                    Add Interval
+                                                </button>
+                                            )}
+                                            {selectedInterval && showIntervalForm === 0 && (
+                                                <button className="room-button" onClick={() => toggleForm(setShowIntervalForm, showIntervalForm, 2)}>
+                                                    Edit Interval
+                                                </button>
+                                            )}
+                                            {showIntervalForm !== 0 && (
+                                                <button className="room-button" onClick={() => toggleForm(setShowIntervalForm, showIntervalForm, 0)}>
+                                                    Hide
+                                                </button>
+                                            )}
+                                            {showIntervalForm > 0 && (
                                                 <div className="add-form">
                                                     <input type="text" value={intervalStartTime}
                                                            onChange={(e) => setIntervalStartTime(e.target.value)}
-                                                           placeholder="Start Time"/>
+                                                           placeholder="Start Time" required />
                                                     <input type="text" value={intervalEndTime}
-                                                           onChange={(e) => setIntervalEndtime(e.target.value)}
-                                                           placeholder="End Time"/>
+                                                           onChange={(e) => setIntervalEndTime(e.target.value)}
+                                                           placeholder="End Time" required />
                                                     <button class="room-button"
-                                                        onClick={() => addItem('http://localhost:8082/intervals/add', {
-                                                            timeStart: formatTime(intervalStartTime),
-                                                            timeEnd: formatTime(intervalEndTime),
-                                                            deviceId: selectedDevice.id
-                                                        }, updateIntervalAfterAdd)}>Submit
+                                                        onClick={() => {
+                                                            if(validateInterval()) {
+                                                                addItem('intervals', {
+                                                                    timeStart: formatTime(intervalStartTime),
+                                                                    timeEnd: formatTime(intervalEndTime),
+                                                                    deviceId: selectedDevice.id
+                                                                }, updateIntervalAfterAdd)
+                                                            } else {
+                                                                alert('Invalid interval');
+                                                            }
+                                                        }
+                                                    }>Submit
                                                     </button>
                                                 </div>
                                             )}

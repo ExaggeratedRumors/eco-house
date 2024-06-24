@@ -24,10 +24,11 @@
 
 .line-chart-content {
     background-color: var(--clr-white);
-    width: 100%;
-    padding: 20px;
-    margin: 75px;
-    border: 5px solid var(--clr-sharp-green);
+    max-height: 550px;
+    max-width: 1300px;
+    padding: 20px 20px 20px 20px;
+    margin: 25px;
+    border: 3px solid var(--clr-sharp-green);
     border-radius: 30px;
     right: 0;
     top: 0;

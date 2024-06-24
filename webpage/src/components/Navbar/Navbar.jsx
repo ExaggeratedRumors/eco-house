@@ -43,12 +43,16 @@ const Navbar = () => {
                 <div className={`navbar-collapse ${navToggle ? 'show-navbar-collapse' : ""}`}>
                     <div className='navbar-collapse-content'>
                         <ul className='navbar-nav'>
-                            <li className='text-white'>
-                                <Link to="/power">Power consumption</Link>
-                            </li>
-                            <li className='text-white'>
-                                <Link to="/rooms">My rooms</Link>
-                            </li>
+                            {localStorage.getItem('token')  ? (
+                                <li className='text-white'>
+                                    <Link to="/power">Power consumption</Link>
+                                </li>
+                            ) : ( "" )}
+                            {localStorage.getItem('token')  ? (
+                                <li className='text-white'>
+                                    <Link to="/rooms">My houses</Link>
+                                </li>
+                            ) : ( "" )}
                             {/*<li className='text-white'>
                                 <Link to="/settings">Settings</Link>
                             </li>*/}
