@@ -66,7 +66,7 @@ public class OwnerController {
     @DeleteMapping("/owners/delete/{id}")
     public ResponseEntity<Long> deleteOwner(@PathVariable Long id) {
         System.out.println("Deleting owner with id " + id);
-        Boolean result = ownerService.deleteUser(id);
+        Boolean result = ownerService.deleteOwner(id);
         if(!result)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         System.out.println("Owner deleted");

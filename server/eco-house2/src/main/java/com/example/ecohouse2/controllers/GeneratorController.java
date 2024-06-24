@@ -50,4 +50,15 @@ public class GeneratorController {
         System.out.println("Generator added with id " + result.getId() + " to house with id " + result.getHouse().getHouse_id());
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    @CrossOrigin
+    @DeleteMapping("/generators/delete/{id}")
+    public ResponseEntity<Long> deleteGenerator(@PathVariable Long id) {
+        System.out.println("Deleting generator with id " + id);
+        Boolean result = generatorService.deleteGenerator(id);
+        if(!result)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        System.out.println("Generator deleted");
+        return new ResponseEntity<>(id, HttpStatus.OK);
+    }
 }

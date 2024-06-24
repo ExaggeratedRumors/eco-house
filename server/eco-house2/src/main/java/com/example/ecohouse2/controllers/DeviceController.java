@@ -50,4 +50,15 @@ public class DeviceController {
         System.out.println("House added with id " + result.getId());
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    @CrossOrigin
+    @DeleteMapping("/devices/delete/{id}")
+    public ResponseEntity<Long> deleteDevice(@PathVariable Long id) {
+        System.out.println("Deleting device with id " + id);
+        Boolean result = deviceService.deleteDevice(id);
+        if(!result)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        System.out.println("Device deleted");
+        return new ResponseEntity<>(id, HttpStatus.OK);
+    }
 }

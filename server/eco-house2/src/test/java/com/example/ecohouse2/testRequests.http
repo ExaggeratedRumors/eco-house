@@ -1,5 +1,5 @@
 ### get owner
-GET http://localhost:8082/owners/1
+GET http://localhost:8082/owners/2
 
 
 
@@ -25,6 +25,8 @@ Content-Type: application/json
   "daytimeTariff": 0.5803,
   "nightTariff": 0.3672
 }
+### remove house
+DELETE http://localhost:8082/houses/remove/1
 
 
 
@@ -37,6 +39,8 @@ Content-Type: application/json
   "houseId": 1,
   "name": "Pokój 1"
 }
+### remove room
+DELETE http://localhost:8082/rooms/remove/1
 
 ### add device
 POST http://localhost:8082/devices/add
@@ -47,16 +51,8 @@ Content-Type: application/json
   "name": "Lampka",
   "powerConsumption": 200
 }
-
-### add device
-POST http://localhost:8082/devices/add
-Content-Type: application/json
-
-{
-  "roomId": 1,
-  "name": "Lampka2",
-  "powerConsumption": 400
-}
+### remove device
+DELETE http://localhost:8082/devices/remove/1
 
 
 ### add generator
@@ -70,8 +66,10 @@ Content-Type: application/json
   "batteryCapacity": 100,
   "wattage": 300
 }
+### remove generator
+DELETE http://localhost:8082/generators/remove/1
 
-### add interval1
+### add interval
 POST http://localhost:8082/intervals/add
 Content-Type: application/json
 
@@ -80,24 +78,22 @@ Content-Type: application/json
   "timeStart": "09:00",
   "timeEnd": "11:00"
 }
+### remove interval
+DELETE http://localhost:8082/intervals/remove/1
 
-### add interval2
-POST http://localhost:8082/intervals/add
-Content-Type: application/json
 
-{
-  "deviceId": 2,
-  "timeStart": "07:00",
-  "timeEnd": "10:00"
-}
+
+
+
 
 ### get daily power graph
 POST http://localhost:8082/dailyPowerGraph
 Content-Type: application/json
 
 {
-  "houseId": 1
+  "houseId": 2
 }
+
 
 ### get daily costs graph
 POST http://localhost:8082/dailyCostsGraph

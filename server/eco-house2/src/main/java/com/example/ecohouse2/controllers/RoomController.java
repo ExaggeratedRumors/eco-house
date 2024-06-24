@@ -47,4 +47,16 @@ public class RoomController {
         System.out.println("Room added with id " + result.getId() + " to house with id " + result.getHouse().getHouse_id());
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+
+    @CrossOrigin
+    @DeleteMapping("/rooms/delete/{id}")
+    public ResponseEntity<Long> deleteRoom(@PathVariable Long id) {
+        System.out.println("Deleting room with id " + id);
+        Boolean result = roomService.deleteRoom(id);
+        if(!result)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        System.out.println("Room deleted");
+        return new ResponseEntity<>(id, HttpStatus.OK);
+    }
 }

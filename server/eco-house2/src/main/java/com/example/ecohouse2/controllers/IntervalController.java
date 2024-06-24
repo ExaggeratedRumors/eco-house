@@ -41,4 +41,15 @@ public class IntervalController {
         System.out.println("Interval added with id " + result.getId() + " to device with id " + result.getDevice().getId());
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    @CrossOrigin
+    @DeleteMapping("/intervals/delete/{id}")
+    public ResponseEntity<Long> deleteInterval(@PathVariable Long id) {
+        System.out.println("Deleting interval with id " + id);
+        Boolean result = intervalService.deleteInterval(id);
+        if(!result)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        System.out.println("Interval deleted");
+        return new ResponseEntity<>(id, HttpStatus.OK);
+    }
 }
