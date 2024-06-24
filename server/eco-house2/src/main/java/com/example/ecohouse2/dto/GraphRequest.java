@@ -8,5 +8,5 @@ import java.io.Serializable;
 @Getter
 @Setter
 public class GraphRequest implements Serializable {
-    private long houseId;
+    private Long houseId;
 }

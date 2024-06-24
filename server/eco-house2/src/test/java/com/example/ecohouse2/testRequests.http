@@ -92,7 +92,7 @@ Content-Type: application/json
 }
 
 ### get daily power graph
-GET http://localhost:8082/dailyPowerGraph
+POST http://localhost:8082/dailyPowerGraph
 Content-Type: application/json
 
 {
@@ -100,7 +100,7 @@ Content-Type: application/json
 }
 
 ### get daily costs graph
-GET http://localhost:8082/dailyCostsGraph
+POST http://localhost:8082/dailyCostsGraph
 Content-Type: application/json
 
 {
@@ -108,7 +108,7 @@ Content-Type: application/json
 }
 
 ### get daily cost
-GET http://localhost:8082/dailyCost
+POST http://localhost:8082/dailyCost
 Content-Type: application/json
 
 {
@@ -116,7 +116,7 @@ Content-Type: application/json
 }
 
 ### get daily energy produced
-GET http://localhost:8082/dailyEnergyProduced
+POST http://localhost:8082/dailyEnergyProduced
 Content-Type: application/json
 
 {

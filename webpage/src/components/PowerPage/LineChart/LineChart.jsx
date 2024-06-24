@@ -2,24 +2,58 @@ import React, { useEffect, useRef, useState } from 'react';
 import Chart from 'chart.js/auto'
 import "./LineChart.css";
 
+const LineChart = ({ houseId, houseName }) => {
+    const [dailyPowerGraph, setDailyPowerGraph] = useState(null);
+    const [dailyCostsGraph, setDailyCostsGraph] = useState(null);
+    const [dailyCost, setDailyCost] = useState(null);
+    const [dailyEnergyProduced, setDailyEnergyProduced] = useState(null);
+    const powerChartRef = useRef();
+    const costChartRef = useRef();
 
-const LineChart = ({ data }) => {
-    const chartRef = useRef();
-    const [chartInstance, setChartInstance] = useState(null);
+    /** Token **/
+    let token = localStorage.getItem('token');
+
+    /** Functions **/
+
+    const fetchData = async (endpoint, updateFunction) => {
+        try {
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ houseId: houseId }),
+            });
+            const newItem = await response.json();
+            updateFunction(newItem);
+            //alert('Item added successfully: ' + newItem);
+        } catch (error) {
+            alert(`Error fetching line chart data: ${error}`);
+        }
+    };
 
     useEffect(() => {
-        if (chartRef && chartRef.current) {
-            const newChartInstance = new Chart(chartRef.current, {
+        fetchData('http://localhost:8082/dailyPowerGraph', setDailyPowerGraph);
+        fetchData('http://localhost:8082/dailyCostsGraph', setDailyCostsGraph);
+        fetchData('http://localhost:8082/dailyCost', setDailyCost);
+        fetchData('http://localhost:8082/dailyEnergyProduced', setDailyEnergyProduced);
+    }, []);
+
+    useEffect(() => {
+        if (powerChartRef && powerChartRef.current && dailyPowerGraph) {
+            const newChartInstance = new Chart(powerChartRef.current, {
                 type: 'line',
                 data: {
-                    labels: data.map((value, index) => index.toString()),
+                    labels: Object.keys(dailyPowerGraph),
                     datasets: [
                         {
-                            label: 'Values',
-                            data: data,
+                            label: 'Power consumption (kWh)',
+                            data: Object.values(dailyPowerGraph),
                             borderColor: 'rgb(51,255,80)',
                             backgroundColor: 'rgba(51,255,80,0.5)',
                             fill: true,
+                            stepped: true,
                         },
                     ],
                 },
@@ -29,7 +63,7 @@ const LineChart = ({ data }) => {
                             display: true,
                             title: {
                                 display: true,
-                                text: 'Hour',
+                                text: 'Time',
                             },
                         },
                         y: {
@@ -42,15 +76,76 @@ const LineChart = ({ data }) => {
                     },
                 },
             });
-            setChartInstance(newChartInstance);
+
+            //setChartInstance(newChartInstance);
+            return () => {
+                if (newChartInstance) {
+                    newChartInstance.destroy();
+                }
+            };
         }
-    }, [data]);
+    }, [dailyPowerGraph]);
+
+
+    useEffect(() => {
+        if (costChartRef && costChartRef.current && dailyCostsGraph) {
+            const newChartInstance = new Chart(costChartRef.current, {
+                type: 'line',
+                data: {
+                    labels: Object.keys(dailyCostsGraph),
+                    datasets: [
+                        {
+                            label: 'Cost (PLN)',
+                            data: Object.values(dailyCostsGraph),
+                            borderColor: 'rgb(51,255,80)',
+                            backgroundColor: 'rgba(51,255,80,0.5)',
+                            fill: true,
+                            stepped: true,
+                        },
+                    ],
+                },
+                options: {
+                    fill: {
+                        type: 'gradient' / 'solid' / 'pattern' / 'image'
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Time',
+                            },
+                        },
+                        y: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Cost (PLN)',
+                            },
+                        },
+                    },
+                },
+            });
+
+            //setChartInstance(newChartInstance);
+            return () => {
+                if (newChartInstance) {
+                    newChartInstance.destroy();
+                }
+            };
+        }
+    }, [dailyCostsGraph]);
 
     return (
-        <section className='bg-md-black text-center'>
+        <section className='power section-p bg-md-black text-center'>
             <div className='line-chart grid'>
-                <canvas className='line-chart-content' ref={chartRef} />
-                {/*<Line data={data} options={options} />*/}
+                <h2>House: {houseName}</h2>
+                <lu>
+                    {dailyEnergyProduced && (<li>Daily energy produced: {dailyEnergyProduced.toFixed(6)} kWh</li>)}
+                    {dailyCost && (<li>Daily cost: {dailyCost.toFixed(6)} PLN</li>)}
+                </lu>
+                <canvas className='line-chart-content' ref={powerChartRef}/>
+                <canvas className='line-chart-content' ref={costChartRef}/>
             </div>
         </section>
     )

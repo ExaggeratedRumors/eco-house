@@ -79,6 +79,14 @@ const Rooms = () => {
         return `${formattedHours}:${formattedMinutes}`;
     }
 
+    function countIntervalsForRoom() {
+        let intervalsCount = 0;
+        selectedRoom.devices.forEach(device => {
+            intervalsCount += device.intervals.length;
+        });
+        return intervalsCount;
+    }
+
     /** Manipulate items **/
     const deleteItem = async (endpoint, id, updateFunction) => {
         try {
@@ -510,11 +518,13 @@ const Rooms = () => {
                                     </div>
                                 </div>
                             )}
+                            {countIntervalsForRoom() < 1 ? "" : (
                             <div className='time-chart'>
                                 <div className='time-chart-content'>
-                                    <RoomsChart devicesData={selectedRoom.devices} />
+                                    <RoomsChart devicesData={selectedRoom.devices} roomName={selectedRoom.name} />
                                 </div>
                             </div>
+                            )}
                         </>
                     )}
                 </div>

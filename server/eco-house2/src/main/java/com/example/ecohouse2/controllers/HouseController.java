@@ -45,28 +45,28 @@ public class HouseController {
     }
 
     @CrossOrigin
-    @GetMapping("/dailyPowerGraph")
+    @PostMapping("/dailyPowerGraph")
     public ResponseEntity<Map<String, Double>> getDailyPowerGraph(@RequestBody GraphRequest graphRequest) {
         House house = houseService.getHouse(graphRequest.getHouseId());
         return new ResponseEntity<>(house.calculateDailyEnergyConsumed(), HttpStatus.OK);
     }
 
     @CrossOrigin
-    @GetMapping("/dailyCostsGraph")
+    @PostMapping("/dailyCostsGraph")
     public ResponseEntity<Map<String, Double>> getDailyCostsGraph(@RequestBody GraphRequest graphRequest) {
         House house = houseService.getHouse(graphRequest.getHouseId());
         return new ResponseEntity<>(house.calculateDailyCost(), HttpStatus.OK);
     }
 
     @CrossOrigin
-    @GetMapping("/dailyCost")
+    @PostMapping("/dailyCost")
     public ResponseEntity<Double> getDailyCost(@RequestBody GraphRequest graphRequest) {
         House house = houseService.getHouse(graphRequest.getHouseId());
         return new ResponseEntity<>(house.calculateDailyCostSum(), HttpStatus.OK);
     }
 
     @CrossOrigin
-    @GetMapping("/dailyEnergyProduced")
+    @PostMapping("/dailyEnergyProduced")
     public ResponseEntity<Double> getDailyEnergyGenerated(@RequestBody GraphRequest graphRequest) {
         House house = houseService.getHouse(graphRequest.getHouseId());
         return new ResponseEntity<>(house.calculateDailyEnergyProduced(), HttpStatus.OK);

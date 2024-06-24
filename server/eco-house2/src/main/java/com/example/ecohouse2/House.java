@@ -1,7 +1,6 @@
 package com.example.ecohouse2;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonGetter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -76,7 +75,7 @@ public class House implements Serializable {
 
     //@JsonGetter("dailyCostGraph")
     public Map<String, Double> calculateDailyCost() {
-        return calculateCostOfEnergy(calculateDailyEnergyConsumed());
+        return calculateCostOfEnergy(convertToPowerMap(getIntervals()));
     }
 
     //@JsonGetter("dailyCost")

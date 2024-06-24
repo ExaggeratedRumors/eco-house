@@ -1,10 +1,6 @@
 import React, {useState} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import "./Navbar.css";
-import {FaTwitter, FaSkype, FaVimeoV, FaDoorOpen, FaSignOutAlt, FaSign} from "react-icons/fa";
-import {IoMdRocket} from "react-icons/io";
-import {FaDoorClosed} from "react-icons/fa6";
-import {GiLogging} from "react-icons/gi";
 import {GoSignOut} from "react-icons/go";
 import axios from "axios";
 
@@ -15,10 +11,14 @@ const Navbar = () => {
         setNavToggle(toggle => !toggle);
     }
 
+    const navigate = useNavigate();
+
+
     const handleLogout = async () => {
         try {
             localStorage.removeItem('token');
             window.location.reload();
+            navigate('/');
             await axios.post('http://localhost:8082/api/logout');
             console.log('Logged out successfully');
         } catch (error) {
@@ -49,9 +49,9 @@ const Navbar = () => {
                             <li className='text-white'>
                                 <Link to="/rooms">My rooms</Link>
                             </li>
-                            <li className='text-white'>
+                            {/*<li className='text-white'>
                                 <Link to="/settings">Settings</Link>
-                            </li>
+                            </li>*/}
                             <li className='text-white'>
                                 <Link to="/help">Help</Link>
                             </li>

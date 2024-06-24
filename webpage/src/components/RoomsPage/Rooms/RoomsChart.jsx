@@ -1,18 +1,7 @@
 import React from 'react';
 import Chart from 'react-apexcharts';
 
-const getTimestampForToday = (time) => {
-    if (typeof time !== 'string') {
-        throw new TypeError('Expected a string in the format "HH:mm"');
-    }
-
-    const today = new Date();
-    const [hours, minutes] = time.split(':').map(Number);
-    today.setHours(hours, minutes, 0, 0);
-    return today.getTime();
-};
-
-const RoomChart = ({ devicesData }) => {
+const RoomChart = ({ devicesData, roomName }) => {
     const transformedData = devicesData.map((device) => ({
         name: device.name,
         data: device.intervals.map((interval) => ({
@@ -27,7 +16,7 @@ const RoomChart = ({ devicesData }) => {
         name: device.name,
         data: device.data.map((interval) => ({
             x: interval.x,
-            y: interval.y.map((time) => new Date(`2000-01-01T${time}`).getTime()),
+            y: interval.y.map((time) => new Date(`2000-01-01T${time}`).getTime())
         })),
     }));
 
@@ -81,7 +70,7 @@ const RoomChart = ({ devicesData }) => {
             horizontalAlign: 'left'
         },
         title: {
-            text: 'Device Operation Schedule',
+            text: 'Device Operation Schedule Of Room: ' + roomName,
             align: 'center'
         },
         tooltip: {
@@ -96,14 +85,6 @@ const RoomChart = ({ devicesData }) => {
             }
         }
     };
-
-    /*const processedSeries = series.map(device => ({
-        ...device,
-        data: device.data.map(interval => ({
-            x: interval.x,
-            y: interval.y.map(time => getTimestampForToday(time))
-        }))
-    }));*/
 
     return (
         <div>

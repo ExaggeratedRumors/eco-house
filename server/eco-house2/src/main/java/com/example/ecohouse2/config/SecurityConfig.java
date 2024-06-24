@@ -22,6 +22,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/register", "/api/login").permitAll()
                         .requestMatchers("/owners/**").permitAll()
                         .requestMatchers("/owners/add/**", "/houses/add/**", "/devices/add/**", "/generators/add/**", "/rooms/add/**", "/intervals/add/**").permitAll()
+                        .requestMatchers("/dailyCost/**", "/dailyCostsGraph/**", "/dailyPowerGraph/**", "/dailyEnergyProduced/**").permitAll()
                         .anyRequest().authenticated()
                 );
         return http.build();
