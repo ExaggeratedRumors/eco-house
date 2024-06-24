@@ -640,7 +640,7 @@ const Rooms = () => {
                                                     Add Interval
                                                 </button>
                                             )}
-                                            {selectedInterval && showIntervalForm === 0 && (
+                                            {selectedInterval && showIntervalForm === 0 && (    
                                                 <button className="room-button" onClick={() => toggleForm(setShowIntervalForm, showIntervalForm, 2)}>
                                                     Edit Interval
                                                 </button>

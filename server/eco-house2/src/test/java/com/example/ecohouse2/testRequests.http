@@ -30,9 +30,9 @@ PATCH http://localhost:8082/houses/update
 Content-Type: application/json
 
 {
-  "id": 1,
+  "id": 8,
   "address": "Kilinskiego 1",
-  "name": "Domek się przeprowadził",
+  "name": "mbh",
   "daytimeTariff": 0.7,
   "nightTariff": 0.3
 }
