@@ -146,7 +146,7 @@ const Rooms = () => {
     /** Manipulate items **/
     const deleteItem = async (collection, id, updateFunction) => {
         try {
-            await axios.delete(`http://localhost:8082/${collection}/delete/${id}`, {
+            await axios.delete(`http://localhost:8082/${collection}/remove/${id}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                 }
@@ -183,7 +183,7 @@ const Rooms = () => {
 
 
             const newItem = await response.json();
-            updateFunction(newItem);
+            if(mode === 1) updateFunction(newItem);
             await fetchData()
         } catch (error) {
             alert(`Error adding item: ${error}`);
@@ -377,27 +377,27 @@ const Rooms = () => {
                                 )}
                                 {showHouseForm !== 0 && (
                                     <button className="room-button" onClick={() => toggleForm(setShowHouseForm, showHouseForm, 0)}>
-                                        Hide
+                                        {showHouseForm === 1 ? "Cancel adding" : "Cancel editing"}
                                     </button>
                                 )}
                                 {showHouseForm > 0 && (
                                     <div className="add-form">
                                         <input type="text" value={houseName}
                                                onChange={(e) => setHouseName(e.target.value)}
-                                               placeholder="House name"/>
+                                               placeholder={showHouseForm === 1 ? "House name" : selectedHouse.name}/>
                                         <input type="text" value={houseAddress}
                                                onChange={(e) => setHouseAddress(e.target.value)}
-                                               placeholder="House address"/>
+                                               placeholder={showHouseForm === 1 ? "House address" : selectedHouse.address}/>
                                         <input type="number" step="0.01" value={houseDayTariff === 0 ? '' : houseDayTariff}
                                                onChange={(e) => setHouseDayTariff(e.target.value)}
-                                               placeholder="House day tariff"/>
+                                               placeholder={showHouseForm === 1 ? "House day tariff" : selectedHouse.daytimeTariff}/>
                                         <input type="number" step="0.01" value={houseNightTariff === 0 ? '' : houseNightTariff}
                                                onChange={(e) => setHouseNightTariff(e.target.value)}
-                                               placeholder="House night tariff"/>
+                                               placeholder={showHouseForm === 1 ? "House night tariff" : selectedHouse.nightTariff}/>
                                         <button class="room-button"
                                             onClick={() => sendItem('houses',
                                                 {
-                                                    id: ownerData.owner_id,
+                                                    id: showHouseForm === 1 ? ownerData.owner_id : selectedHouse.house_id,
                                                     name: houseName,
                                                     address: houseAddress,
                                                     daytimeTariff: houseDayTariff,
@@ -447,17 +447,17 @@ const Rooms = () => {
                                         )}
                                         {showRoomForm !== 0 && (
                                             <button className="room-button" onClick={() => toggleForm(setShowRoomForm, showRoomForm, 0)}>
-                                                Hide
+                                                {showRoomForm === 1 ? "Cancel adding" : "Cancel editing"}
                                             </button>
                                         )}
                                         {showRoomForm > 0 && (
                                             <div className="add-form">
                                                 <input type="text" value={roomName}
                                                        onChange={(e) => setRoomName(e.target.value)}
-                                                       placeholder="Room Name"/>
+                                                       placeholder={showRoomForm === 1 ? "Room Name" : selectedRoom.name} />
                                                 <button class="room-button" onClick={() => sendItem('rooms', {
                                                     name: roomName,
-                                                    id: selectedHouse.house_id
+                                                    id: showRoomForm === 1 ? selectedHouse.house_id : selectedRoom.id
                                                 }, updateRoomAfterAdd, showRoomForm)}>Submit
                                                 </button>
                                             </div>
@@ -508,27 +508,27 @@ const Rooms = () => {
                                         )}
                                         {showGeneratorForm !== 0 && (
                                             <button className="room-button" onClick={() => toggleForm(setShowGeneratorForm, showGeneratorForm, 0)}>
-                                                Hide
+                                                {showGeneratorForm === 1 ? "Cancel adding" : "Cancel editing"}
                                             </button>
                                         )}
                                         {showGeneratorForm > 0 && (
                                             <div className="add-form">
                                                 <input type="text" value={generatorName}
                                                        onChange={(e) => setGeneratorName(e.target.value)}
-                                                       placeholder="Generator name"/>
+                                                       placeholder={showGeneratorForm === 1 ? "Generator name" : selectedGenerator.name}/>
                                                 <input type="number" step="0.01" value={generatorEffectiveness === 0 ? '' : generatorEffectiveness}
                                                        onChange={(e) => setGeneratorEffectiveness(e.target.value)}
-                                                       placeholder="Generator effectiveness"/>
+                                                       placeholder={showGeneratorForm === 1 ? "Generator effectiveness" : selectedGenerator.effectiveness}/>
                                                 <input type="number" step="0.01" value={generatorBatteryCapacity === 0 ? '' : generatorBatteryCapacity}
                                                        onChange={(e) => setGeneratorBatteryCapacity(e.target.value)}
-                                                       placeholder="Generator battery capacity"/>
+                                                       placeholder={showGeneratorForm === 1 ? "Generator battery capacity" : selectedGenerator.batteryCapacity}/>
                                                 <input type="number" step="0.01" value={generatorWattage === 0 ? '' : generatorWattage}
                                                        onChange={(e) => setGeneratorWattage(e.target.value)}
-                                                       placeholder="Generator wattage"/>
+                                                       placeholder={showGeneratorForm === 1 ? "Generator wattage" : selectedGenerator.wattage} />
 
                                                 <button class="room-button" onClick={() => sendItem('generators', {
                                                     name: generatorName,
-                                                    id: selectedHouse.id,
+                                                    id: showGeneratorForm === 1 ? selectedHouse.id : selectedGenerator.id,
                                                     wattage: generatorWattage,
                                                     effectiveness: generatorEffectiveness,
                                                     batteryCapacity: generatorBatteryCapacity
@@ -587,21 +587,21 @@ const Rooms = () => {
                                         )}
                                         {showDeviceForm !== 0 && (
                                             <button className="room-button" onClick={() => toggleForm(setShowDeviceForm, showDeviceForm, 0)}>
-                                                Hide
+                                                {showDeviceForm === 1 ? "Cancel adding" : "Cancel editing"}
                                             </button>
                                         )}
                                         {showDeviceForm > 0 && (
                                             <div className="add-form">
                                                 <input type="text" value={deviceName}
                                                        onChange={(e) => setDeviceName(e.target.value)}
-                                                       placeholder="Device Name"/>
+                                                       placeholder={showDeviceForm === 1 ? "Device Name" : selectedDevice.name}/>
                                                 <input type="number" step="0.01"
                                                        value={devicePowerConsumption === 0 ? '' : devicePowerConsumption}
                                                        onChange={(e) => setDevicePowerConsumption(e.target.value)}
-                                                       placeholder="Power consumption"/>
+                                                       placeholder={showDeviceForm === 1 ? "Power consumption" : selectedDevice.powerConsumptionPerHour} />
                                                 <button class="room-button" onClick={() => sendItem('devices', {
                                                     name: deviceName,
-                                                    id: selectedRoom.id,
+                                                    id: showDeviceForm === 1 ?  selectedRoom.id : selectedDevice.id,
                                                     powerConsumption: devicePowerConsumption
                                                 }, updateDeviceAfterAdd, showDeviceForm)}>Submit
                                                 </button>
@@ -647,25 +647,25 @@ const Rooms = () => {
                                             )}
                                             {showIntervalForm !== 0 && (
                                                 <button className="room-button" onClick={() => toggleForm(setShowIntervalForm, showIntervalForm, 0)}>
-                                                    Hide
+                                                    {showIntervalForm === 1 ? "Cancel adding" : "Cancel editing"}
                                                 </button>
                                             )}
                                             {showIntervalForm > 0 && (
                                                 <div className="add-form">
                                                     <input type="text" value={intervalStartTime}
                                                            onChange={(e) => setIntervalStartTime(e.target.value)}
-                                                           placeholder="Start Time" required />
+                                                           placeholder={showIntervalForm === 1 ? "Start Time" : selectedInterval.timeStart} required />
                                                     <input type="text" value={intervalEndTime}
                                                            onChange={(e) => setIntervalEndTime(e.target.value)}
-                                                           placeholder="End Time" required />
+                                                           placeholder={showIntervalForm === 1 ? "End Time" : selectedInterval.timeEnd} required />
                                                     <button class="room-button"
                                                         onClick={() => {
                                                             if(validateInterval()) {
                                                                 sendItem('intervals', {
                                                                     timeStart: formatTime(intervalStartTime),
                                                                     timeEnd: formatTime(intervalEndTime),
-                                                                    id: selectedDevice.id
-                                                                }, updateIntervalAfterAdd, showIntervalForm)
+                                                                    id: showIntervalForm === 1 ? selectedDevice.id : selectedInterval.id,
+                                                                 }, updateIntervalAfterAdd, showIntervalForm)
                                                             } else {
                                                                 alert('Invalid interval');
                                                             }
