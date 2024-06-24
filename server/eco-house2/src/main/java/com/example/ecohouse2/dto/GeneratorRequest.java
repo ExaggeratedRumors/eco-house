@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Setter
 public class GeneratorRequest implements Serializable {
     private String name;
-    private Long houseId;
+    private Long id;
     private Double effectiveness;
     private Double batteryCapacity;
     private Double wattage;

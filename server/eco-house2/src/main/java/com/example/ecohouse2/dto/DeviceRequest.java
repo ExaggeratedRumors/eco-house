@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Setter
 public class DeviceRequest implements Serializable {
     private String name;
-    private Long roomId;
+    private Long id;
     private Double powerConsumption;
 
     public Device toDevice(){

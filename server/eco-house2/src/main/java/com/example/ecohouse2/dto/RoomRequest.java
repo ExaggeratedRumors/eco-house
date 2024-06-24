@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Setter
 public class RoomRequest implements Serializable {
     private String name;
-    private Long houseId;
+    private Long id;
 
     public Room toRoom(){
         Room room = new Room();

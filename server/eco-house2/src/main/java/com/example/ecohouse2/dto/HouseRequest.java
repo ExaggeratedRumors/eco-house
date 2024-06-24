@@ -11,14 +11,14 @@ import java.time.OffsetDateTime;
 @Getter
 @Setter
 public class HouseRequest implements Serializable {
-    private int ownerId;
+    private int id;
     private String address;
     private String name;
     private double daytimeTariff;
     private double nightTariff;
 
     public HouseRequest() {
-        this.ownerId = 0;
+        this.id = 0;
         this.address = "";
         this.name = "";
         this.daytimeTariff = 0.0;

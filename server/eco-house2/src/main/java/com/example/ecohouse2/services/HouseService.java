@@ -32,8 +32,8 @@ public class HouseService {
 
 
     public House addHouse(HouseRequest houseRequest) {
-        Owner houseOwner = ownerRepo.findById((long)houseRequest.getOwnerId()).orElseThrow(
-                () -> new EntityNotFoundException("Owner not found with id " + houseRequest.getOwnerId()));
+        Owner houseOwner = ownerRepo.findById((long)houseRequest.getId()).orElseThrow(
+                () -> new EntityNotFoundException("Owner not found with id " + houseRequest.getId()));
         House newHouse = houseRequest.toHouse();
         newHouse.setOwner(houseOwner);
         System.out.println("Attempt to add house with owner: " + houseOwner.getOwner_id() + " " + houseOwner.getName());
@@ -52,5 +52,21 @@ public class HouseService {
         return houseRepo.findById(houseID).orElseThrow(
                 () -> new EntityNotFoundException("House not found with id " + houseID)
         );
+    }
+
+    public boolean doesHouseExist(HouseRequest houseRequest) {
+        String name = houseRequest.getName();
+        int ownerId = houseRequest.getId();
+        return houseRepo.doesHouseExist(name, (long)ownerId);
+    }
+
+    public House updateHouse(HouseRequest houseRequest) {
+        House house = getHouse((long) houseRequest.getId());
+        if (house == null) return null;
+        house.setName(houseRequest.getName());
+        house.setDaytimeTariff(houseRequest.getDaytimeTariff());
+        house.setNightTariff(houseRequest.getNightTariff());
+        house.setAddress(houseRequest.getAddress());
+        return houseRepo.save(house);
     }
 }

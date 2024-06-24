@@ -36,12 +36,18 @@ public class GeneratorService {
     }
 
     public Generator addGenerator(GeneratorRequest generatorRequest) {
-        House house = houseRepository.findById(generatorRequest.getHouseId()).orElseThrow(
-                () -> new EntityNotFoundException("House not found with id " + generatorRequest.getHouseId()));
+        House house = houseRepository.findById(generatorRequest.getId()).orElseThrow(
+                () -> new EntityNotFoundException("House not found with id " + generatorRequest.getId()));
         Generator newGenerator = generatorRequest.toGenerator();
         newGenerator.setHouse(house);
         System.out.println("Attempt to add generator to house: " + house.getHouse_id() + " " + house.getName());
         return generatorRepo.save(newGenerator);
+    }
+
+    public boolean doesGeneratorExist(GeneratorRequest generatorRequest) {
+        String name = generatorRequest.getName();
+        Long houseID = generatorRequest.getId();
+        return generatorRepo.doesGeneratorExist(name, houseID);
     }
 
     public Boolean deleteGenerator(Long index) {
@@ -54,5 +60,15 @@ public class GeneratorService {
         return generatorRepo.findById(index).orElseThrow(
                 () -> new EntityNotFoundException("Generator not found with id " + index)
         );
+    }
+
+    public Generator updateGenerator(GeneratorRequest generatorRequest) {
+        Generator generator = getGenerator(generatorRequest.getId());
+        if (generator == null) return null;
+        generator.setName(generatorRequest.getName());
+        generator.setBatteryCapacity(generatorRequest.getBatteryCapacity());
+        generator.setWattage(generatorRequest.getWattage());
+        generator.setEffectiveness(generatorRequest.getEffectiveness());
+        return generatorRepo.save(generator);
     }
 }

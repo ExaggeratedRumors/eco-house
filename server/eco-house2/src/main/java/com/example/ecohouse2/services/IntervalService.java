@@ -26,8 +26,8 @@ public class IntervalService {
 
 
     public Interval addInterval(IntervalRequest intervalRequest) {
-        Device device = deviceRepo.findById(intervalRequest.getDeviceId()).orElseThrow(
-                () -> new EntityNotFoundException("device not found with id " + intervalRequest.getDeviceId()));
+        Device device = deviceRepo.findById(intervalRequest.getId()).orElseThrow(
+                () -> new EntityNotFoundException("device not found with id " + intervalRequest.getId()));
         Interval newInterval = intervalRequest.toInterval();
         newInterval.setDevice(device);
         System.out.println("Attempt to add interval to device: " + device.getId() + " " + device.getName());
@@ -45,5 +45,27 @@ public class IntervalService {
         return intervalRepo.findById(index).orElseThrow(
                 () -> new EntityNotFoundException("Interval not found with id " + index)
         );
+    }
+
+    public boolean doesIntervalOverlap(IntervalRequest intervalRequest) {
+        List<Interval> intervals = intervalRepo.getDeviceIntervals(intervalRequest.getId());
+        for(Interval interval : intervals) {
+            if(intervalRequest.getTimeStart().isBefore(interval.getTimeEnd()) && intervalRequest.getTimeEnd().isAfter(interval.getTimeStart())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isIntervalInvalid(IntervalRequest intervalRequest) {
+        return intervalRequest.getTimeStart().isAfter(intervalRequest.getTimeEnd());
+    }
+
+    public Interval updateInterval(IntervalRequest intervalRequest) {
+        Interval interval = getInterval(intervalRequest.getId());
+        if (interval == null) return null;
+        interval.setTimeStart(intervalRequest.getTimeStart());
+        interval.setTimeEnd(intervalRequest.getTimeEnd());
+        return intervalRepo.save(interval);
     }
 }
