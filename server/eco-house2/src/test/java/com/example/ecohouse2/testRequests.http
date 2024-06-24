@@ -1,5 +1,5 @@
 ### get owner
-GET http://localhost:8082/owners/2
+GET http://localhost:8082/owners/1
 
 
 
@@ -91,7 +91,7 @@ POST http://localhost:8082/dailyPowerGraph
 Content-Type: application/json
 
 {
-  "houseId": 2
+  "houseId": 1
 }
 
 

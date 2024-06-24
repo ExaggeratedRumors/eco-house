@@ -147,7 +147,7 @@ public class House implements Serializable {
                 intervals.add(0, Pair.of(LocalTime.parse("00:00"), -energyProduced));
             }
             if (intervals.get(intervals.size() - 1).getFirst().isBefore(LocalTime.parse("23:59"))) {
-                intervals.add(Pair.of(LocalTime.parse("23:59"), energyProduced));
+                intervals.add(Pair.of(LocalTime.parse("23:59"), 0.0));
             }
         }
 
