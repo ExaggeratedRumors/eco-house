@@ -528,7 +528,7 @@ const Rooms = () => {
 
                                                 <button class="room-button" onClick={() => sendItem('generators', {
                                                     name: generatorName,
-                                                    id: showGeneratorForm === 1 ? selectedHouse.id : selectedGenerator.id,
+                                                    id: showGeneratorForm === 1 ? selectedHouse.house_id : selectedGenerator.id,
                                                     wattage: generatorWattage,
                                                     effectiveness: generatorEffectiveness,
                                                     batteryCapacity: generatorBatteryCapacity
