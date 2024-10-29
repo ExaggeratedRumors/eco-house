@@ -1,4 +1,4 @@
-# eco-house server
+# eco-house client
 
 ReactJS client.
 
